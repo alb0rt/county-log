@@ -29,10 +29,10 @@ function dealExists(data, guid) {
 }
 
 function createPathData(list){
-	fs.readFile('final-output.json', function(err, data) {
+	fs.readFile('flights.json', function(err, data) {
 		if(err) {
 			if (err.code === "ENOENT") {
-				console.log("final-output.json not found");
+				console.log("flights.json not found");
 			} else {
 				throw err;
 			}
