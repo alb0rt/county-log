@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+path{
+	pointer-events: all;
+}
+.state{ fill: #e8e8e8;}
+
+.state-boundary {
+	fill: none;
+	stroke: #b8b8b8;
+	stroke-linejoin: round;
+}
+
+.state-boundary.internal {
+	stroke: #b8b8b8;
+}
+
+.state-boundary.external {
+	stroke: #d8d8d8;
+}
+
+.arc {
+	stroke: #7cafc2;
+	stroke-width: 2px;
+	stroke-linecap: round;
+	fill: none;
+}
+
+.arc-hover {
+	opacity: 0;
+}
+
+.arc :hover {
+	stroke: #000;
+	fill: #666;
+}
+
+.arc-label {
+	font-size: 14px;
+	fill: #DC9656;
+}
+
+
+.place,
+.place-label {
+	fill: #7cafc2;
+	user-select: none;
+}
+
+.subunit-label {
+	fill: #777;
+	fill-opacity: .3;
+	font-size: 10px;
+	font-weight: 200;
+	text-anchor: middle;
+}
+
+text {
+	font-family: "Helvetica Neue" Helvetica, Arial, sans-serif;
+	font-size: 10px;
+	pointer-events: none;
+}
+
+</style>
+<body>
+<script src="/js/d3.v3.min.js"></script>
+<script src="/js/d3.geo.projection.v0.min.js"></script>
+<script src="/js/topojson.v1.min.js"></script>
+<script>
+
+
+var pathCenter = function(coordinates) {
+	return [(coordinates[0][0] + coordinates[1][0]) / 2, 
+			(coordinates[0][1] + coordinates[1][1]) / 2];
+}
+
+
+var width = 1296,
+	height = 675;
+
+var projection = d3.geo.albersUsa()
+			.scale(1500)
+			.translate([width / 2, height / 2]);
+
+var path = d3.geo.path()
+	.projection(projection);
+
+
+var svg = d3.select("body").append("svg")
+	.attr("width", width)
+	.attr("height", height);
+
+var stateGroup = svg.append("g");
+var pathGroup = svg.append("g");
+
+d3.json("us.json", function(error, us) {
+	if (error)
+		return console.error(error);	
+	
+	stateGroup.selectAll(".state")
+		.data(topojson.feature(us, us.objects.states).features)
+		.enter()
+		.append("path")
+		.attr("class", function(d) {
+			return "state " + d.id;
+		})
+		.attr("d", path);
+	
+
+	stateGroup.insert("path")
+		.datum(topojson.mesh(us, us.objects.states, function(a, b) {
+			return a !== b;
+		}))
+		.attr("d", path)
+		.attr("class", "state-boundary internal");
+
+	stateGroup.insert("path")
+		.datum(topojson.mesh(us, us.objects.states, function(a, b) {
+			return a === b;
+		}))
+		.attr("d", path)
+		.attr("class", "state-boundary external");
+
+	svg.selectAll(".subunit-label")
+		.data(topojson.feature(us, us.objects.states).features)
+		.enter()
+		.append("text")
+		.attr("class", function(d) {
+			return "subunit-label " + d.id;
+		})
+		.attr("transform", function(d) {
+			return "translate(" + path.centroid(d) + ")";
+		})
+		.attr("dy", ".35em")
+		.text(function(d) {
+			return d.properties.postal;
+		});
+/*
+	svg.insert("path")
+		.datum(topojson.feature(us, us.objects.places))
+		.attr("d", path)
+		.attr("class", "place");*/
+
+});
+
+d3.json("flights.json", function(error, us) {
+	if(error)
+		console.error(error);
+
+	var arc = pathGroup.selectAll("path")
+		.data(us.arcs.features)
+		.enter()
+		.append("path")
+		.attr("class", "arc")
+		.attr("d", path);
+
+	
+	var label = pathGroup.selectAll("text")
+		.data(us.arcs.features)
+		.enter()
+		.append("text");
+
+
+	// this step currently fails for destinations in Hawaii or Alaska
+	var arcLabels = label
+		.attr("class", "arc-label")
+		.attr("transform", function(d) {
+			return "translate(" + projection(pathCenter(d.geometry.coordinates)) + ")";
+		})
+		.attr("dy", "-5em")
+		.text(function(d) {
+			return d.properties.airline + " " + d.properties.price
+		});
+
+	svg.insert("path")
+		.datum(us.places)
+		.attr("d", path)
+		.attr("class", "place");
+
+	pathGroup.selectAll(".place-label")
+		.data(us.places.geometries)
+		.enter()
+		.append("text")
+		.attr("class", "place-label")
+		.attr("transform", function(d) {
+			return "translate(" + projection(d.coordinates) + ")";
+		})
+		.attr("dy", ".35em")
+		.text(function(d) {
+			return d.properties.name;
+		})
+
+	pathGroup.selectAll(".place-label")
+		.attr("x", function(d) {
+			return d.coordinates[0] > -98 ? 6 : -6
+		})
+		.style("text-anchor", function(d) {
+			return d.coordinates[0] > -98 ? "start" : "end"
+		});
+
+});
+
+
+</script>

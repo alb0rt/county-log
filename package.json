@@ -1,0 +1,14 @@
+{
+  "name"         : "flightMapper",
+  "version"      : "0.0.1",
+  "main"         : "rss-parser.js",
+  "author"       : "alb0rt",
+  "scripts"		 : {
+  	"start" : "http-server"
+  },
+  "dependencies" : {
+    "request"    : "latest",
+    "feedparser" : "latest",
+    "http-server": "latest"
+  }
+}

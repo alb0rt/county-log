@@ -1,0 +1,67 @@
+{
+    "type": "Topology",
+    "places": {
+        "type": "GeometryCollection",
+        "geometries": [
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Los Angeles"
+                },
+                "coordinates": [
+                    -118.18192636994041,
+                    33.99192410876543
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Anchorage"
+                },
+                "coordinates": [
+                    -149.90021488645436,
+                    61.219969908790006
+                ]
+            }
+        ]
+    },
+    "arcs": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -118.18192636994041,
+                            33.99192410876543
+                        ],
+                        [
+                            -149.90021488645436,
+                            61.219969908790006
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "Delta",
+                    "price": "$335",
+                    "from": "Los Angeles",
+                    "to": "Anchorage",
+                    "date": "2014-12-04T12:00:55.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54322"
+                }
+            }
+        ]
+    },
+    "transform": {
+        "scale": [
+            0.0358960334509451,
+            0.005251163636663664
+        ],
+        "translate": [
+            -179.14350338399993,
+            18.90611714300016
+        ]
+    }
+}
