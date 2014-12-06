@@ -86,20 +86,24 @@ d3.json("flights.json", function(error, us) {
 	if(error)
 		console.error(error);
 
-	var arc = pathGroup.selectAll(".flights")
+	// Create group for flight deal paths
+	var arcGroup = pathGroup.selectAll(".flights")
         .data(us.arcs.features)
         .enter()
         .append("g")
         .attr("class", "flights");
     
-	arc.append("path")
+    // Draw visible flight deal path
+	var arc = arcGroup.append("path")
         .attr("class", "arc")
         .attr("d", path);
 
-	arc.append("path")
+    // Create wider hidden path to make hovering easier
+	var arcHidden = arcGroup.append("path")
         .attr("class", "arc-hidden")
         .attr("d", path);
 
+    // Create hover tooltip
 	var tooltip = d3.select("body")
         .data(us.arcs.features)
         .append("div")
@@ -114,10 +118,12 @@ d3.json("flights.json", function(error, us) {
             return d.properties.airline + " " + d.properties.price + ": " + d.properties.from + " - " + d.properties.to;
         });
 
-    arc
+    // Define mouse hover behavior
+    arcHidden
         .on("mouseover", function () {
             tooltip.style("visibility", "visible");
-            all_arcs
+            console.log(this);
+            d3.select(this)
                 .transition()
                 .duration(250)
                 .style("stroke", "#ba8baf");
@@ -143,12 +149,13 @@ d3.json("flights.json", function(error, us) {
 		.enter()
 		.append("text");
 
-
+	// Draw path endpoints
 	svg.insert("path")
 		.datum(us.places)
 		.attr("d", path)
 		.attr("class", "place");
 
+	// Draw path endpoint labels
 	pathGroup.selectAll(".place-label")
 		.data(us.places.geometries)
 		.enter()
@@ -162,6 +169,7 @@ d3.json("flights.json", function(error, us) {
 			return d.properties.name;
 		})
 
+	// Horizontal allign the labels based on whether they are on left or right of map
 	pathGroup.selectAll(".place-label")
 		.attr("x", function(d) {
 			return d.coordinates[0] > -98 ? 6 : -6
