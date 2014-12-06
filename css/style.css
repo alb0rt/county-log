@@ -1,0 +1,66 @@
+div,
+text {
+    font-family: "Helvetica Neue" Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    pointer-events: none;
+}
+ 
+.state{ fill: #e8e8e8;}
+ 
+.state:hover {
+    opacity: 0.4;
+}
+ 
+.state-boundary {
+    fill: none;
+    stroke: #b8b8b8;
+    stroke-linejoin: round;
+}
+ 
+.state-boundary.internal {
+    stroke: #b8b8b8;
+}
+ 
+.state-boundary.external {
+    stroke: #d8d8d8;
+}
+ 
+.arc {
+    stroke: #7cafc2;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    fill: none;
+}
+ 
+.arc-hidden {
+    stroke: black;
+    opacity: 0;
+    stroke-width: 13px;
+    fill: none;
+}
+ 
+.arc-label-container{
+    background-color: #282828;
+    padding: 5px;
+    border-radius: 4px;
+    text-align: left;
+}
+.arc-label {
+    font-size: 11px;
+    color: #A1B56C;
+    user-select:none;
+}
+ 
+.place,
+.place-label {
+    fill: #7cafc2;
+    user-select: none;
+}
+ 
+.state-label {
+    fill: #777;
+    fill-opacity: .4;
+    font-size: 10px;
+    font-weight: 200;
+    text-anchor: middle;
+}

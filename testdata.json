@@ -1,0 +1,199 @@
+{
+    "type": "Topology",
+    "places": {
+        "type": "GeometryCollection",
+        "geometries": [
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Philadelphia"
+                },
+                "coordinates": [
+                    -75.17194183200792,
+                    40.001919022526465
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Houston"
+                },
+                "coordinates": [
+                    -95.341925149146,
+                    29.821920243188856
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "San Francisco"
+                },
+                "coordinates": [
+                    -122.41716877355225,
+                    37.76919562968743
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "New York"
+                },
+                "coordinates": [
+                    -73.98196278740681,
+                    40.75192492259464
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Boston"
+                },
+                "coordinates": [
+                    -71.07195953218684,
+                    42.33190600170229
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Salt Lake City"
+                },
+                "coordinates": [
+                    -111.93199778104821,
+                    40.77696215404006
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Chicago"
+                },
+                "coordinates": [
+                    -87.75200083270931,
+                    41.83193651927843
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Miami"
+                },
+                "coordinates": [
+                    -80.22605193945003,
+                    25.789556555021534
+                ]
+            }
+        ]
+    },
+    "arcs": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -75.17194183200792,
+                            40.001919022526465
+                        ],
+                        [
+                            -95.341925149146,
+                            29.821920243188856
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "Delta",
+                    "price": "$690",
+                    "from": "Philadelphia",
+                    "to": "Houston",
+                    "date": "2014-12-04T12:00:55.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54322"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -122.41716877355225,
+                            37.76919562968743
+                        ],
+                        [
+                            -73.98196278740681,
+                            40.75192492259464
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "United",
+                    "price": "$668",
+                    "from": "San Francisco",
+                    "to": "New York",
+                    "date": "2014-12-04T12:00:55.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54322"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -71.07195953218684,
+                            42.33190600170229
+                        ],
+                        [
+                            -111.93199778104821,
+                            40.77696215404006
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "Delta",
+                    "price": "$770",
+                    "from": "Boston",
+                    "to": "Salt Lake City",
+                    "date": "2014-12-04T12:00:55.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54322"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -87.75200083270931,
+                            41.83193651927843
+                        ],
+                        [
+                            -80.22605193945003,
+                            25.789556555021534
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "jetBlue",
+                    "price": "$582",
+                    "from": "Chicago",
+                    "to": "Miami",
+                    "date": "2014-12-04T12:00:55.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54322"
+                }
+            }
+        ]
+    },
+    "transform": {
+        "scale": [
+            0.0358960334509451,
+            0.005251163636663664
+        ],
+        "translate": [
+            -179.14350338399993,
+            18.90611714300016
+        ]
+    }
+}

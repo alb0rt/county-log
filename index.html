@@ -1,86 +1,21 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style>
-
-path{
-	pointer-events: all;
-}
-
-path:hover{
-	fill: red;
-	opacity: 0.5;
-}
-.state{ fill: #e8e8e8;}
-
-.state-boundary {
-	fill: none;
-	stroke: #b8b8b8;
-	stroke-linejoin: round;
-}
-
-.state-boundary.internal {
-	stroke: #b8b8b8;
-}
-
-.state-boundary.external {
-	stroke: #d8d8d8;
-}
-
-.arc {
-	stroke: #7cafc2;
-	stroke-width: 2px;
-	stroke-linecap: round;
-	fill: none;
-}
-
-.arc-hover {
-	opacity: 0;
-}
-
-.arc :hover {
-	stroke: #000;
-	fill: #666;
-}
-
-.arc-label {
-	font-size: 14px;
-	fill: #DC9656;
-}
-
-
-.place,
-.place-label {
-	fill: #7cafc2;
-	user-select: none;
-}
-
-.subunit-label {
-	fill: #777;
-	fill-opacity: .3;
-	font-size: 10px;
-	font-weight: 200;
-	text-anchor: middle;
-}
-
-text {
-	font-family: "Helvetica Neue" Helvetica, Arial, sans-serif;
-	font-size: 10px;
-	pointer-events: none;
-}
-
-</style>
+<link href="/css/style.css" rel="stylesheet"/>
 <body>
-<script src="/js/d3.v3.min.js"></script>
-<script src="/js/d3.geo.projection.v0.min.js"></script>
-<script src="/js/topojson.v1.min.js"></script>
-<script>
 
+
+    <script src="/js/d3.v3.min.js"></script>
+    <script src="/js/d3.geo.projection.v0.min.js"></script>
+    <script src="/js/topojson.v1.min.js"></script>
+   
+<script>
 
 var pathCenter = function(coordinates) {
 	return [(coordinates[0][0] + coordinates[1][0]) / 2, 
 			(coordinates[0][1] + coordinates[1][1]) / 2];
 }
 
+// Setup SVG canvas
 
 var width = 1296,
 	height = 675;
@@ -92,7 +27,6 @@ var projection = d3.geo.albersUsa()
 var path = d3.geo.path()
 	.projection(projection);
 
-
 var svg = d3.select("body").append("svg")
 	.attr("width", width)
 	.attr("height", height);
@@ -100,10 +34,12 @@ var svg = d3.select("body").append("svg")
 var stateGroup = svg.append("g");
 var pathGroup = svg.append("g");
 
+// Draw map
 d3.json("us.json", function(error, us) {
 	if (error)
 		return console.error(error);	
 	
+    // Draw land units
 	stateGroup.selectAll(".state")
 		.data(topojson.feature(us, us.objects.states).features)
 		.enter()
@@ -113,14 +49,14 @@ d3.json("us.json", function(error, us) {
 		})
 		.attr("d", path);
 	
-
+    // Draw state boundaries
 	stateGroup.insert("path")
 		.datum(topojson.mesh(us, us.objects.states, function(a, b) {
 			return a !== b;
 		}))
 		.attr("d", path)
 		.attr("class", "state-boundary internal");
-
+        
 	stateGroup.insert("path")
 		.datum(topojson.mesh(us, us.objects.states, function(a, b) {
 			return a === b;
@@ -128,12 +64,13 @@ d3.json("us.json", function(error, us) {
 		.attr("d", path)
 		.attr("class", "state-boundary external");
 
-	svg.selectAll(".subunit-label")
+    // Draw state labels
+	stateGroup.selectAll(".state-label")
 		.data(topojson.feature(us, us.objects.states).features)
 		.enter()
 		.append("text")
 		.attr("class", function(d) {
-			return "subunit-label " + d.id;
+			return "state-label " + d.id;
 		})
 		.attr("transform", function(d) {
 			return "translate(" + path.centroid(d) + ")";
@@ -142,42 +79,70 @@ d3.json("us.json", function(error, us) {
 		.text(function(d) {
 			return d.properties.postal;
 		});
-/*
-	svg.insert("path")
-		.datum(topojson.feature(us, us.objects.places))
-		.attr("d", path)
-		.attr("class", "place");*/
-
 });
 
-d3.json("flights.json", function(error, us) {
+// Draw flight deal overlay
+d3.json("testdata.json", function(error, us) {
 	if(error)
 		console.error(error);
 
-	var arc = pathGroup.selectAll("path")
-		.data(us.arcs.features)
-		.enter()
-		.append("path")
-		.attr("class", "arc")
-		.attr("d", path);
+	var arc = pathGroup.selectAll(".flights")
+        .data(us.arcs.features)
+        .enter()
+        .append("g")
+        .attr("class", "flights");
+    
+	arc.append("path")
+        .attr("class", "arc")
+        .attr("d", path);
 
-	
+	arc.append("path")
+        .attr("class", "arc-hidden")
+        .attr("d", path);
+
+	var tooltip = d3.select("body")
+        .data(us.arcs.features)
+        .append("div")
+        .attr("class", "arc-label-container")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden");
+
+	tooltip.append("div")
+        .attr("class", "arc-label")
+        .text(function (d) {
+            return d.properties.airline + " " + d.properties.price + ": " + d.properties.from + " - " + d.properties.to;
+        });
+
+    arc
+        .on("mouseover", function () {
+            tooltip.style("visibility", "visible");
+            all_arcs
+                .transition()
+                .duration(250)
+                .style("stroke", "#ba8baf");
+	    })
+        .on("mousemove", function () {
+            return tooltip.style("top", (d3.event.pageY - 60) + "px").style("left", (d3.event.pageX) + "px");
+        })
+        .on("mouseout", function () {
+            tooltip.style("visibility", "hidden");
+            all_arcs
+                .transition()
+                .duration(250)
+                .style("stroke", "#7cafc2");
+        })
+        .on("click", function(d) {
+            location.href = d.properties.guid;
+        });
+
+    var all_arcs = d3.selectAll(".arc");
+
 	var label = pathGroup.selectAll("text")
 		.data(us.arcs.features)
 		.enter()
 		.append("text");
 
-
-	// this step currently fails for destinations in Hawaii or Alaska
-	var arcLabels = label
-		.attr("class", "arc-label")
-		.attr("transform", function(d) {
-			return "translate(" + projection(pathCenter(d.geometry.coordinates)) + ")";
-		})
-		.attr("dy", "-5em")
-		.text(function(d) {
-			return d.properties.airline + " " + d.properties.price
-		});
 
 	svg.insert("path")
 		.datum(us.places)
@@ -209,3 +174,4 @@ d3.json("flights.json", function(error, us) {
 
 
 </script>
+</body>
