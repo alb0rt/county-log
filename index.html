@@ -10,6 +10,13 @@
    
 <script>
 
+var colors = {
+	"Jetblue" : "#368FFF",
+	"United" : "blue",
+	"Delta" : "#fd923d",
+	"American" : "red"
+}
+
 var pathCenter = function(coordinates) {
 	return [(coordinates[0][0] + coordinates[1][0]) / 2, 
 			(coordinates[0][1] + coordinates[1][1]) / 2];
@@ -123,10 +130,25 @@ d3.json("flights.json", function(error, us) {
     arcHidden
         .on("mouseover", function (d) {
             tooltip.style("visibility", "visible");
-            d3.select(this)
+            all_arcs
                 .transition()
                 .duration(250)
-                .style("stroke", "#ba8baf");
+                .style("stroke", function(d2) {
+                	if(d.properties.airline === d2.properties.airline){
+                		if(d.properties.airline === "Delta") {
+                			return colors.Delta;
+                		} else if (d.properties.airline === "United") {
+                			return colors.United;
+                		} else if (d.properties.airline === "jetBlue") {
+                			return colors.Jetblue;
+                		} else if (d.properties.airline === "American") {
+                			return colors.American;
+                		} else
+                			return "black";
+                	}
+                	else
+                		return "#7cafc2";
+                });
             d3.select(".arc-label")
             	.data(us.arcs.features)
             	.text(function () {
