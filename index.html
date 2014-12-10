@@ -112,6 +112,7 @@ d3.json("flights.json", function(error, us) {
         .style("z-index", "10")
         .style("visibility", "hidden");
 
+    // Create tooltip label with fille rtext
 	tooltip.append("div")
         .attr("class", "arc-label")
         .text(function (d) {
@@ -120,13 +121,17 @@ d3.json("flights.json", function(error, us) {
 
     // Define mouse hover behavior
     arcHidden
-        .on("mouseover", function () {
+        .on("mouseover", function (d) {
             tooltip.style("visibility", "visible");
-            console.log(this);
             d3.select(this)
                 .transition()
                 .duration(250)
                 .style("stroke", "#ba8baf");
+            d3.select(".arc-label")
+            	.data(us.arcs.features)
+            	.text(function () {
+            		return d.properties.airline + " " + d.properties.price + ": " + d.properties.from + " - " + d.properties.to;
+            	});
 	    })
         .on("mousemove", function () {
             return tooltip.style("top", (d3.event.pageY - 60) + "px").style("left", (d3.event.pageX) + "px");
