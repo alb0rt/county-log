@@ -4,6 +4,10 @@ text {
     font-size: 10px;
     pointer-events: none;
 }
+
+body {
+    padding-top: 70px;
+}
  
 .state{ fill: #e8e8e8;}
  

@@ -102,6 +102,26 @@
                     -121.47198394645096,
                     38.57696724029415
                 ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Los Angeles"
+                },
+                "coordinates": [
+                    -118.18192636994041,
+                    33.99192410876543
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Billings"
+                },
+                "coordinates": [
+                    -108.54000044943984,
+                    45.78830202135839
+                ]
             }
         ]
     },
@@ -226,6 +246,30 @@
                     "to": "Sacramento",
                     "date": "2014-12-06T11:35:13.000Z",
                     "guid": "http://www.theflightdeal.com/?p=54379"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -118.18192636994041,
+                            33.99192410876543
+                        ],
+                        [
+                            -108.54000044943984,
+                            45.78830202135839
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "Delta",
+                    "price": "$215",
+                    "from": "Los Angeles",
+                    "to": "Billings",
+                    "date": "2014-12-10T12:00:17.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54532"
                 }
             }
         ]

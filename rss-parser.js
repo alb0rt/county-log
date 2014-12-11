@@ -72,7 +72,7 @@ function createPathData(list){
 		for(var i = 0; i < list.length; i++) {
 
 			var dupe = false;
-			console.log("Found: "list[i].from + " -> " + list[i].to);
+			console.log("Found: " + list[i].from + " -> " + list[i].to);
 
 			// check for duplicates
 			for(var j = 0; j < out.arcs.features.length; j++) {
@@ -88,7 +88,7 @@ function createPathData(list){
 				
 				// only add to final output if coordinates for both places are known
 				if(fromCoordinates && toCoordinates) {
-					console.log("Adding " + list[i].from + " -> " list[i].to);
+					console.log("Adding " + list[i].from + " -> " + list[i].to);
 
 					out.arcs.features.push({
 						"type" : "Feature",
