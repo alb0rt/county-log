@@ -2,7 +2,8 @@ var colors = {
 	"jetBlue" : "#368FFF",
 	"United" : "blue",
 	"Delta" : "#fd923d",
-	"American" : "red"
+	"American" : "red",
+	"Alaska" : "green"
 }
 
 var pathCenter = function(coordinates) {
@@ -16,7 +17,7 @@ var width = 1200,
 	height = 625;
 
 var projection = d3.geo.albersUsa()
-			.scale(1500)
+			.scale(1200)
 			.translate([width / 2, height / 2]);
 
 var path = d3.geo.path()

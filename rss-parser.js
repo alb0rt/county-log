@@ -177,7 +177,7 @@ function parseTfdRss() {
 	var parseTitle = function(title, date, guid) {
 
 		var json;
-		var regex = /^(United|Delta|jetBlue|American) – ([^:]*): ([^–]*)– ([^(.,]*)/;
+		var regex = /^(United|Delta|jetBlue|American|Alaska) – ([^:]*): ([^–]*)– ([^(.,]*)/;
 		var parsedTitle = regex.exec(title);
 		if(parsedTitle) {
 			var slice = parsedTitle.slice(1, 5);
