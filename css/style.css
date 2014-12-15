@@ -1,7 +1,8 @@
 div,
 text {
-    font-family: "Helvetica Neue" Helvetica, Arial, sans-serif;
+    font-family: "europa", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 10px;
+    font-weight: 200;
     pointer-events: none;
 }
 
@@ -30,7 +31,7 @@ body {
 }
  
 .arc {
-    stroke: #7cafc2;
+    stroke: #b8b8b8;
     stroke-width: 2px;
     stroke-linecap: round;
     fill: none;
@@ -44,21 +45,20 @@ body {
 }
  
 .arc-label-container{
-    background-color: #585858;
-    opacity: 0.9;
+    background-color: #e8e8e8;
+    opacity: 0.95;
     padding: 8px;
     border-radius: 4px;
     text-align: left;
 }
 .arc-label {
     font-size: 14px;
-    color: #A1B56C;
     user-select:none;
 }
  
 .place,
 .place-label {
-    fill: #7cafc2;
+    fill: #b8b8b8;
     user-select: none;
 }
  

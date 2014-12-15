@@ -120,19 +120,28 @@ d3.json("flights.json", function(error, us) {
     arcHidden
         .on("mouseover", function (d) {
             tooltip.style("visibility", "visible");
+            
             all_arcs
                 .transition()
-                .duration(250)
+                .duration(500)
                 .style("stroke", function(d2) {
-                	if(d.properties.airline === d2.properties.airline){
+                	if(d.properties.airline === d2.properties.airline) {
                 		if(colors[d.properties.airline])
                 			return colors[d.properties.airline];
                 		else
                 			return "black";
                 	}
                 	else
-                		return "#7cafc2";
+                		return "#b8b8b8";
+                })
+                .style("stroke-width", function(d2) {
+                	if(d.properties.guid === d2.properties.guid) {
+                		return "5px";
+                	} else {
+                		return "1px";
+                	}
                 });
+
             d3.select(".arc-label")
             	.data(us.arcs.features)
             	.style("color", function(d2) {
@@ -153,7 +162,8 @@ d3.json("flights.json", function(error, us) {
             all_arcs
                 .transition()
                 .duration(250)
-                .style("stroke", "#7cafc2");
+                .style("stroke", "#b8b8b8")
+                .style("stroke-width", "2px");
         })
         .on("click", function(d) {
             location.href = d.properties.guid;
