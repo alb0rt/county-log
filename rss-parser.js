@@ -4,7 +4,7 @@ var feedParser  = require('feedparser')
 
 
 function findCoordinates(place) {
-	var us = JSON.parse(fs.readFileSync('places.json'));
+	var us = JSON.parse(fs.readFileSync('./html/places.json'));
 	var placeData = us.features;
 	var coordinates;
 
@@ -29,7 +29,7 @@ function dealExists(data, guid) {
 }
 
 function createPathData(list){
-	fs.readFile('flights.json', function(err, data) {
+	fs.readFile('./html/flights.json', function(err, data) {
 		if(err) {
 			if (err.code === "ENOENT") {
 				console.log("flights.json not found");
@@ -121,7 +121,7 @@ function createPathData(list){
 			}
 		}
 
-			fs.writeFile('flights.json', JSON.stringify(out, null, 4), function(err) {
+			fs.writeFile('./html/flights.json', JSON.stringify(out, null, 4), function(err) {
 					if(err)
 						console.error("Error in writing JSON to disk");
 
@@ -133,7 +133,7 @@ function createPathData(list){
 	});
 }
 
-function parseTfdRss() {
+exports.parseTfdRss = function() {
 
 	var req = request('http://feeds.feedburner.com/theflightdeal')
 		, feedparser = new feedParser(); 
@@ -202,6 +202,4 @@ function parseTfdRss() {
 	}
 }
 
-
-parseTfdRss();
 

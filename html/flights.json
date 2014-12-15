@@ -1,0 +1,331 @@
+{
+    "type": "Topology",
+    "places": {
+        "type": "GeometryCollection",
+        "geometries": [
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Los Angeles"
+                },
+                "coordinates": [
+                    -118.18192636994041,
+                    33.99192410876543
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Anchorage"
+                },
+                "coordinates": [
+                    -149.90021488645436,
+                    61.219969908790006
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Philadelphia"
+                },
+                "coordinates": [
+                    -75.17194183200792,
+                    40.001919022526465
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Eugene"
+                },
+                "coordinates": [
+                    -123.10001611518834,
+                    44.0500101919244
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Los Angeles"
+                },
+                "coordinates": [
+                    -118.18192636994041,
+                    33.99192410876543
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Charleston"
+                },
+                "coordinates": [
+                    -81.63272811046517,
+                    38.3497379751048
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "San Francisco"
+                },
+                "coordinates": [
+                    -122.41716877355225,
+                    37.76919562968743
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "West Palm Beach"
+                },
+                "coordinates": [
+                    -80.12362125824558,
+                    26.745019957480224
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "New York"
+                },
+                "coordinates": [
+                    -73.98196278740681,
+                    40.75192492259464
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Sacramento"
+                },
+                "coordinates": [
+                    -121.47198394645096,
+                    38.57696724029415
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Los Angeles"
+                },
+                "coordinates": [
+                    -118.18192636994041,
+                    33.99192410876543
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Billings"
+                },
+                "coordinates": [
+                    -108.54000044943984,
+                    45.78830202135839
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "Seattle"
+                },
+                "coordinates": [
+                    -122.34193084586849,
+                    47.57194791253073
+                ]
+            },
+            {
+                "type": "Point",
+                "properties": {
+                    "name": "San Antonio"
+                },
+                "coordinates": [
+                    -98.50925119896328,
+                    29.48927904852593
+                ]
+            }
+        ]
+    },
+    "arcs": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -118.18192636994041,
+                            33.99192410876543
+                        ],
+                        [
+                            -149.90021488645436,
+                            61.219969908790006
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "Delta",
+                    "price": "$335",
+                    "from": "Los Angeles",
+                    "to": "Anchorage",
+                    "date": "2014-12-04T12:00:55.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54322"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -75.17194183200792,
+                            40.001919022526465
+                        ],
+                        [
+                            -123.10001611518834,
+                            44.0500101919244
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "United",
+                    "price": "$233",
+                    "from": "Philadelphia",
+                    "to": "Eugene",
+                    "date": "2014-12-06T12:05:57.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54403"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -118.18192636994041,
+                            33.99192410876543
+                        ],
+                        [
+                            -81.63272811046517,
+                            38.3497379751048
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "United",
+                    "price": "$267",
+                    "from": "Los Angeles",
+                    "to": "Charleston",
+                    "date": "2014-12-06T12:00:36.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54388"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -122.41716877355225,
+                            37.76919562968743
+                        ],
+                        [
+                            -80.12362125824558,
+                            26.745019957480224
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "United",
+                    "price": "$282",
+                    "from": "San Francisco",
+                    "to": "West Palm Beach",
+                    "date": "2014-12-06T11:45:39.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54397"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -73.98196278740681,
+                            40.75192492259464
+                        ],
+                        [
+                            -121.47198394645096,
+                            38.57696724029415
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "jetBlue",
+                    "price": "$298",
+                    "from": "New York",
+                    "to": "Sacramento",
+                    "date": "2014-12-06T11:35:13.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54379"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -118.18192636994041,
+                            33.99192410876543
+                        ],
+                        [
+                            -108.54000044943984,
+                            45.78830202135839
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "Delta",
+                    "price": "$215",
+                    "from": "Los Angeles",
+                    "to": "Billings",
+                    "date": "2014-12-10T12:00:17.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54532"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            -122.34193084586849,
+                            47.57194791253073
+                        ],
+                        [
+                            -98.50925119896328,
+                            29.48927904852593
+                        ]
+                    ]
+                },
+                "properties": {
+                    "airline": "United",
+                    "price": "$240",
+                    "from": "Seattle",
+                    "to": "San Antonio",
+                    "date": "2014-12-13T12:05:09.000Z",
+                    "guid": "http://www.theflightdeal.com/?p=54656"
+                }
+            }
+        ]
+    },
+    "transform": {
+        "scale": [
+            0.0358960334509451,
+            0.005251163636663664
+        ],
+        "translate": [
+            -179.14350338399993,
+            18.90611714300016
+        ]
+    }
+}
