@@ -8,8 +8,6 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
-var schedule = require('node-schedule');
-var rssParser = require('./rss-parser');
 
 var app = express();
 
@@ -59,11 +57,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
-var j = schedule.scheduleJob({minute: [0, 30]}, function() {
-    rssParser.parseTfdRss();
-});
-
 
 module.exports = app;

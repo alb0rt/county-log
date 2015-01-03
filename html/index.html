@@ -1,27 +1,185 @@
 <!DOCTYPE html>
-	<meta charset="utf-8">
-	<link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+
+
+	<style>
+
+	</style>
 	<link href="/css/style.css" rel="stylesheet"/>
-	<title>TheFlightDeal Mapper</title>
 	<body>
-		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="/">Flight Mapper</a>
-				</div>
-			</div>
-		</nav>
 
-		<div class="container">
-			<h1>Flight Mapper</h1>
-			<div class="map"></div>
+	<div id="county"></div>
+	<div id="stats"></div>
+	<div id="canvas"></div>
+	<div id="list"></div>
 
 
-		<script src="/js/d3.v3.min.js"></script>
-		<script src="/js/d3.geo.projection.v0.min.js"></script>
-	    <script src="/js/topojson.v1.min.js"></script>
-		<script src="/js/flightmapper.js"></script>
-		<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/d3.v3.min.js"></script>
+	<script src="/js/topojson.v1.min.js"></script>
+	<script>
 
 
+		var width = 960,
+			height = 600;
+
+		var path = d3.geo.path()
+			.projection(null);
+
+		var visited = [];
+		var visitedId = [];
+
+
+		var svg = d3.select("#canvas").append("svg")
+			.attr("width", width)
+			.attr("height", height);
+
+		var tooltip;
+		var countyList = d3.select("#list").append("ul");
+
+		var NUM_COUNTIES = 3234;
+		var stats = d3.select("#stats");
+		stats.text("Visited 0 out of " + NUM_COUNTIES + " counties (0%)");
+
+
+		d3.json("assets/us.json", function(err, us) {
+			if(err)
+				return console.error(err);
+
+			// Draw counties as features
+			svg.selectAll(".county")
+				.data(topojson.feature(us, us.objects.counties).features)
+				.enter()
+				.append("path")
+				.attr("class", "county")
+				.attr("d", path)
+				.style("fill", function(d) {
+					return "white";		// setting fill color this way increases performance for reasons I dont understand
+				})
+				.style("stroke", "#333")
+				.style("stroke-width", "0.5px");
+
+			// Draw state interior borders
+			svg.append("path")
+				.datum(topojson.mesh(us, us.objects.states, function(a, b){ return a !== b}))
+				.attr("class", "border")
+				.attr("d", path)
+				.style("fill", "none")
+				.style("stroke", "#222")
+				.style("stroke-width", "1px")
+				.style("z-index", "100");
+
+			// Draw state exterior borders
+			svg.append("path")
+				.datum(topojson.mesh(us, us.objects.states, function(a, b) {
+					return a == b;
+				}))
+				.attr("class", "border")
+				.attr("d", path)
+				.style("fill", "none")
+				.style("stroke", "#222")
+				.style("stroke-width", "1px");
+
+			// Handle mouse interactions with counties
+			svg.selectAll(".county")
+				.on("mouseover", function(d) {	
+					d3.select(".arc-label")
+						.text(function() {
+							return d.properties.NAME;
+						});
+
+					if(visitedId.indexOf(d.id) === -1)
+						d3.select(this)
+							.style("fill", "#ccc");
+				})
+				.on("click", function(d) {
+					d3.select(this)
+						.transition()
+						.duration(500)
+						.style("fill", toggleStatus(d));
+				})
+				.on("mouseout", function(d) {
+					if(visitedId.indexOf(d.id) === -1)
+						d3.select(this)
+							.style("fill", "white");
+				});
+				
+				// Create hover tooltip
+				tooltip = d3.select("#county")
+					.data(topojson.feature(us, us.objects.counties).features)
+					.append("div")
+					.attr("class", "arc-label-container")
+					.style("z-index", "10")
+					.style("visibility", "visible");
+
+				// Create tooltip label with filler text
+				tooltip.append("div")
+					.attr("class", "arc-label")
+					.text(function (d) {
+						return d.properties.NAME;
+					});
+
+				var toggleStatus = function(d) {
+					if(visitedId.indexOf(d.id) === -1)
+					{
+						visitedId.push(d.id);
+						visited.push({
+							"id" : d.id,
+							"name" : d.properties.NAME,
+							"stayed" : true
+						});
+
+						// add to county list
+						countyList
+							.append("li")
+							.text(function() {
+								return d.properties.NAME;
+							})
+							.attr("id", function() {
+								return d.id;
+							})
+
+						stats.text("Visited " + visited.length + " out of " + NUM_COUNTIES + " counties (" + visited.length/NUM_COUNTIES + "%)");
+						return "#b4b";
+					} else {
+						var index = visitedId.indexOf(d.id);
+						if(visited[index].stayed)
+						{
+							visited[index].stayed = false;
+							return "#4b4";
+						} else {
+							// remove from county list
+							d3.select("#" + d.id)
+								.text(""); 			// TODO - actually remove the div
+							visited.splice(index, 1);
+							visitedId.splice(index, 1);
+							stats.text("Visited " + visited.length + " out of " + NUM_COUNTIES + " counties (" + visited.length/NUM_COUNTIES + "%)");
+							return "white";
+						}
+
+					}
+				}
+   			
+   			// Draw interstate highway overlay
+   			d3.json("assets/roads.json", function(err, us) {
+				if(err) 
+					return console.error(err);
+
+				svg.selectAll(".road")
+					.data(topojson.feature(us, us.objects.roads).features)
+					.enter()
+					.append("path")
+					.attr("class", "road")
+					.attr("d", path)
+					.style("fill", function(d) {
+						return "none";
+					})
+					.style("stroke", "red")
+					.style("stroke-width", "0.5px")
+					.style("z-index", "100");
+			});
+		
+		});
+
+		
+	</script>
 	</body>

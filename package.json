@@ -1,5 +1,5 @@
 {
-  "name"         : "flightMapper",
+  "name"         : "county-log",
   "version"      : "0.0.1",
   "author"       : "alb0rt",
   "scripts"		 : {
@@ -14,8 +14,6 @@
     "debug": "~2.0.0",
     "jade": "~1.6.0",
 
-    "request"    : "latest",
-    "feedparser" : "latest",
-    "node-schedule": "latest"
+    "request"    : "latest"
   }
 }
