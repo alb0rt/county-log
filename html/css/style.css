@@ -1,9 +1,23 @@
 @font-face {
-            font-family: europa;
-            src: url('../assets/Europa-Regular.otf');
-        }
-        
-        div {
-            font-family: europa;
-        }
-    
+	font-family: europa;
+	src: url('../assets/Europa-Regular.otf');
+}
+
+@font-face {
+	font-family: europa-light;
+	src: url('../assets/Europa-Light.otf');
+}
+
+div {
+	font-family: europa;
+}
+
+.city {
+	fill: #FF6138;
+}
+
+.city-label {
+	font-family: europa-light;
+	font-size: 10px;
+}
+
