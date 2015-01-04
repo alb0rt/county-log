@@ -2,24 +2,28 @@
 <html lang="en">
 
 
+
+
+	<link href="/css/bootstrap.min.css" rel="stylesheet"/>
+	<link href="/css/style.css" rel="stylesheet"/>
+
 	<style>
 		.datalabel {
 			color: #b3b;
 		}
 
+		.navbar {
+			border-bottom: 2px #FF6138;
+		}
+
 		.thin-line {
-			margin-top: -2px;
-			height: 2px;
-			width: 100%;
+			border-bottom: thick #FF6138;
 			color: #FF6138;
 		}
 
 	
 
 	</style>
-
-	<link href="/css/bootstrap.min.css" rel="stylesheet"/>
-	<link href="/css/style.css" rel="stylesheet"/>
 	<body>
 
 		<nav class="navbar navbar-inverse navbar-fixed-top">
@@ -39,7 +43,7 @@
 		</nav>
 
 		<div class="jumbotron">
-			<div class="row">
+			<center><div class="row">
 				<div class="col-md-4">
 					<div class="checkbox">
 						<label>
@@ -50,13 +54,19 @@
 				<div class="col-md-4">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" id="city-checkbox"> City Labels
+							<input type="checkbox" id="city-checkbox"> City Labels</input>
 						</label>
 					</div>
 				</div>
-			</div>
+				<div class="col-md-4">
+					<label>
+						<button type="button" id="reset-button" class="btn btn-primary btn-xs"> Reset View </button>
+					</label>
+			
+				</div>
+			</div></center>
 			<div class="container">
-				<div id="canvas"></div>
+				<center><div id="canvas"></div></center>
 				
 			</div>
 					
@@ -85,6 +95,14 @@
 				.attr("width", width)
 				.attr("height", height);
 
+			var g = svg.append("g");
+
+			var zoom = d3.behavior.zoom()
+				.translate([0, 0])
+				.scale(1)
+				.scaleExtent([1, 8])
+				.on("zoom", zoomed);
+
 			var tooltip;
 			var countyList = d3.select("#list").append("ul");
 
@@ -92,21 +110,30 @@
 			var stats = d3.select("#stats");
 			stats.text("Visited 0 out of " + NUM_COUNTIES + " counties (0%)");
 
+			// register input listeners
+
 			d3.select("#highway-checkbox")
 				.on("change", function() {
 					var visibility = this.checked ? "visible" : "none";
-					svg.selectAll(".road")
+					g.selectAll(".road")
 						.attr("display", visibility);
 				});
 
 			d3.select("#city-checkbox")
 				.on("change", function() {
 					var visibility = this.checked ? "visible" : "none";
-					svg.selectAll(".city-label")
+					g.selectAll(".city-label")
 						.attr("display", visibility);
-					svg.selectAll(".city")
+					g.selectAll(".city")
 						.attr("display", visibility);
 				});
+
+			d3.select("#reset-button")
+				.on("click", function() {
+					g.transition()
+						.duration(750)
+						.attr("transform", "translate([0,0]).scale(1)");
+				})
 
 
 			d3.json("assets/us.json", function(err, us) {
@@ -114,7 +141,7 @@
 					return console.error(err);
 
 				// Draw counties as features
-				svg.selectAll(".county")
+				g.selectAll(".county")
 					.data(topojson.feature(us, us.objects.counties).features)
 					.enter()
 					.append("path")
@@ -127,7 +154,7 @@
 					.style("stroke-width", "0.5px");
 
 				// Draw state interior borders
-				svg.append("path")
+				g.append("path")
 					.datum(topojson.mesh(us, us.objects.states, function(a, b){ return a !== b}))
 					.attr("class", "border")
 					.attr("d", path)
@@ -137,7 +164,7 @@
 					.style("z-index", "100");
 
 				// Draw state exterior borders
-				svg.append("path")
+				g.append("path")
 					.datum(topojson.mesh(us, us.objects.states, function(a, b) {
 						return a == b;
 					}))
@@ -148,7 +175,7 @@
 					.style("stroke-width", "1px");
 
 				// Handle mouse interactions with counties
-				svg.selectAll(".county")
+				g.selectAll(".county")
 					.on("mouseover", function(d) {	
 						d3.select(".arc-label")
 							.text(function() {
@@ -157,9 +184,10 @@
 
 						if(visitedId.indexOf(d.id) === -1)
 							d3.select(this)
-								.style("fill", "#BEEB9F");
+								.style("fill", "#e5f7d9");
 					})
 					.on("click", function(d) {
+						if(d3.event.defaultPrevented) return;
 						d3.select(this)
 							.transition()
 							.duration(500)
@@ -233,7 +261,7 @@
 					if(err) 
 						return console.error(err);
 
-					svg.selectAll(".road")
+					g.selectAll(".road")
 						.data(topojson.feature(us, us.objects.roads).features)
 						.enter()
 						.append("path")
@@ -254,7 +282,7 @@
 						return console.error(err);
 
 					
-					svg.selectAll(".city")
+					g.selectAll(".city")
 						.data(topojson.feature(us, us.objects.places).features)
 						.enter()
 						.append("path")
@@ -262,7 +290,7 @@
 						.attr("class", "city")
 						.attr("display", "none");
 
-					svg.selectAll(".city-label")
+					g.selectAll(".city-label")
 						.data(topojson.feature(us, us.objects.places).features)
 						.enter()
 						.append("text")
@@ -278,9 +306,17 @@
 						});		
 
 				});
-			
-			});
+				
+				svg.call(zoom)	
 
+				// disable double click zoom
+				svg.on("dblclick.zoom", null);
+
+			});
+		
+		function zoomed() {
+			g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+		}
 			
 
 			
