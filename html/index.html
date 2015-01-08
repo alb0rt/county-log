@@ -21,6 +21,17 @@
 			color: #FF6138;
 		}
 
+		.city .city-label {
+			pointer-events: none;
+		}
+
+		.background {
+			fill: none;
+			border-style: solid;
+			border-width: 2px;
+			border-color: #b4b;
+		}
+
 	
 
 	</style>
@@ -36,6 +47,10 @@
 						</div>
 						<div class="col-md-4">
 							<div id="stats" class="datalabel navbar-brand"></div>
+						</div>
+
+						<div class="col-md-4">
+							<div id="road" class="datalabel navbar-brand"></div>
 						</div>
 				</div>
 			</div>
@@ -101,7 +116,9 @@
 				.translate([0, 0])
 				.scale(1)
 				.scaleExtent([1, 8])
-				.on("zoom", zoomed);
+				.on("zoomstart", disableHover)
+				.on("zoom", zoomed)
+				.on("zoomend", enableHover);
 
 			var tooltip;
 			var countyList = d3.select("#list").append("ul");
@@ -116,6 +133,8 @@
 				.on("change", function() {
 					var visibility = this.checked ? "visible" : "none";
 					g.selectAll(".road")
+						.attr("display", visibility);
+					g.selectAll(".road-hover")
 						.attr("display", visibility);
 				});
 
@@ -134,6 +153,14 @@
 						.duration(750)
 						.attr("transform", "translate([0,0]).scale(1)");
 				})
+
+			// Draw canvas border
+
+			svg.append("rect")
+				.attr("class", "background")
+				.attr("width", width)
+				.attr("height", height)
+
 
 
 			d3.json("assets/us.json", function(err, us) {
@@ -199,63 +226,64 @@
 								.style("fill", "white");
 					});
 					
-					// Create hover tooltip
-					tooltip = d3.select("#county")
-						.data(topojson.feature(us, us.objects.counties).features)
-						.append("div")
-						.attr("class", "arc-label-container")
-						.style("z-index", "10")
-						.style("visibility", "visible");
+				// Create hover tooltip
+				tooltip = d3.select("#county")
+					.data(topojson.feature(us, us.objects.counties).features)
+					.append("div")
+					.attr("class", "arc-label-container")
+					.style("z-index", "10")
+					.style("visibility", "visible");
 
-					// Create tooltip label with filler text
-					tooltip.append("div")
-						.attr("class", "arc-label")
-						.text(function (d) {
-							return d.properties.NAME;
+				// Create tooltip label with filler text
+				tooltip.append("div")
+					.attr("class", "arc-label")
+					.text(function (d) {
+						return d.properties.NAME;
+					});
+
+				// function to toggle county status between stayed, visited, empty
+				var toggleStatus = function(d) {
+					if(visitedId.indexOf(d.id) === -1)
+					{
+						visitedId.push(d.id);
+						visited.push({
+							"id" : d.id,
+							"name" : d.properties.NAME,
+							"stayed" : true
 						});
 
-					var toggleStatus = function(d) {
-						if(visitedId.indexOf(d.id) === -1)
+						// add to county list
+						countyList
+							.append("li")
+							.text(function() {
+								return d.properties.NAME;
+							})
+							.attr("id", function() {
+								return d.id;
+							})
+
+						stats
+							.text("Visited " + visited.length + " out of " + NUM_COUNTIES + " counties (" + (visited.length * 100/NUM_COUNTIES).toFixed(3) + "%)");
+						return "#00A388";
+					} else {
+						var index = visitedId.indexOf(d.id);
+						if(visited[index].stayed)
 						{
-							visitedId.push(d.id);
-							visited.push({
-								"id" : d.id,
-								"name" : d.properties.NAME,
-								"stayed" : true
-							});
-
-							// add to county list
-							countyList
-								.append("li")
-								.text(function() {
-									return d.properties.NAME;
-								})
-								.attr("id", function() {
-									return d.id;
-								})
-
-							stats
-								.text("Visited " + visited.length + " out of " + NUM_COUNTIES + " counties (" + (visited.length * 100/NUM_COUNTIES).toFixed(3) + "%)");
-							return "#00A388";
+							visited[index].stayed = false;
+							return "#BEEB9F";
 						} else {
-							var index = visitedId.indexOf(d.id);
-							if(visited[index].stayed)
-							{
-								visited[index].stayed = false;
-								return "#BEEB9F";
-							} else {
-								// remove from county list
-								d3.select("#" + d.id)
-									.text(""); 			// TODO - actually remove the div
-								visited.splice(index, 1);
-								visitedId.splice(index, 1);
-								stats.text("Visited " + visited.length + " out of " + NUM_COUNTIES + " counties (" + (visited.length*100/NUM_COUNTIES).toFixed(3) + "%)");
-								return "white";
-							}
-
+							// remove from county list
+							d3.select("#" + d.id)
+								.text(""); 			// TODO - actually remove the div
+							visited.splice(index, 1);
+							visitedId.splice(index, 1);
+							stats.text("Visited " + visited.length + " out of " + NUM_COUNTIES + " counties (" + (visited.length*100/NUM_COUNTIES).toFixed(3) + "%)");
+							return "white";
 						}
+
 					}
-				
+				}
+			
 				// Draw interstate highway overlay
 				d3.json("assets/roads.json", function(err, us) {
 					if(err) 
@@ -274,6 +302,23 @@
 						.style("stroke", "#FF6138")
 						.style("stroke-width", "0.5px")
 						.style("z-index", "100");
+
+					g.selectAll(".road-hover")
+						.data(topojson.feature(us, us.objects.roads).features)
+						.enter()
+						.append("path")
+						.attr("class", "road-hover")
+						.attr("d", path)
+						.attr("display", "none")
+						.style("stroke", "black")
+						.style("opacity", "0")
+						.style("stroke-width", "13px")
+						.style("fill", "none");
+
+					// define mouseover functionality for road overlay
+					g.selectAll(".road-hover")
+						.on("mouseover", function(d) { roadMouseover(d) })
+						.on("mouseout", function(d) { roadMouseout(d) });
 				});
 
 				// Draw city name overlay
@@ -316,6 +361,71 @@
 		
 		function zoomed() {
 			g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+			
+		}
+
+		function disableHover() {
+			g.selectAll(".road-hover")
+				.on("mouseover", null)
+				.on("mouseout", null);
+			g.selectAll(".county")
+				.on("mouseover", null)
+				.on("mouseout", null);
+		}
+
+		function enableHover() {
+			g.selectAll(".road-hover")
+				.on("mouseover", roadMouseover)
+				.on("mouseout", roadMouseout);
+
+			g.selectAll(".county")
+				.on("mouseover", function(d) {	
+					d3.select(".arc-label")
+						.text(function() {
+							return d.properties.NAME;
+						});
+
+					if(visitedId.indexOf(d.id) === -1)
+						d3.select(this)
+							.style("fill", "#e5f7d9");
+				})
+				.on("click", function(d) {
+					if(d3.event.defaultPrevented) return;
+					d3.select(this)
+						.transition()
+						.duration(500)
+						.style("fill", toggleStatus(d));
+				})
+				.on("mouseout", function(d) {
+					if(visitedId.indexOf(d.id) === -1)
+						d3.select(this)
+							.style("fill", "white");
+				});
+		}
+
+
+		function roadMouseover(d) {
+			g.selectAll(".road")
+				.transition()
+				.duration(500)
+				.style("stroke", function(d2) {
+					if(d.properties.name == d2.properties.name) {
+						return "blue";
+					} else {
+						return "#FF6138";
+					}
+				});
+			d3.select("#road")
+				.text("I-" + d.properties.name)
+		}
+
+		function roadMouseout(d) {
+			g.selectAll(".road")
+				.transition()
+				.duration(500)
+				.style("stroke", "#FF6138");
+			d3.select("#road")
+				.text("")
 		}
 			
 
