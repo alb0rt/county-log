@@ -35,6 +35,9 @@
 	
 
 	</style>
+	<head>
+		<script src='https://cdn.firebase.com/js/client/2.0.4/firebase.js'></script>
+	</head>
 	<body>
 
 		<nav class="navbar navbar-inverse navbar-fixed-top">
@@ -52,12 +55,14 @@
 						<div class="col-md-4">
 							<div id="road" class="datalabel navbar-brand"></div>
 						</div>
+
 				</div>
 			</div>
 
 		</nav>
 
 		<div class="jumbotron">
+			<div class="container">
 			<center><div class="row">
 				<div class="col-md-4">
 					<div class="checkbox">
@@ -74,12 +79,11 @@
 					</div>
 				</div>
 				<div class="col-md-4">
-					<label>
-						<button type="button" id="reset-button" class="btn btn-primary btn-xs"> Reset View </button>
-					</label>
+						<button type="button" id="reset-button" class="btn btn-primary btn-xs"> Reset View </button>		
 			
 				</div>
 			</div></center>
+			</div>
 			<div class="container">
 				<center><div id="canvas"></div></center>
 				
@@ -368,9 +372,9 @@
 			g.selectAll(".road-hover")
 				.on("mouseover", null)
 				.on("mouseout", null);
-			g.selectAll(".county")
+			/*g.selectAll(".county")
 				.on("mouseover", null)
-				.on("mouseout", null);
+				.on("mouseout", null);*/
 		}
 
 		function enableHover() {
@@ -378,7 +382,7 @@
 				.on("mouseover", roadMouseover)
 				.on("mouseout", roadMouseout);
 
-			g.selectAll(".county")
+			/*g.selectAll(".county")
 				.on("mouseover", function(d) {	
 					d3.select(".arc-label")
 						.text(function() {
@@ -400,7 +404,7 @@
 					if(visitedId.indexOf(d.id) === -1)
 						d3.select(this)
 							.style("fill", "white");
-				});
+				});*/
 		}
 
 
