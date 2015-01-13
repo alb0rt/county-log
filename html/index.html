@@ -1,44 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-
-
 	<link href="/css/bootstrap.min.css" rel="stylesheet"/>
 	<link href="/css/style.css" rel="stylesheet"/>
 
-	<style>
-		.datalabel {
-			color: #b3b;
-		}
-
-		.navbar {
-			border-bottom: 2px #FF6138;
-		}
-
-		.thin-line {
-			border-bottom: thick #FF6138;
-			color: #FF6138;
-		}
-
-		.city .city-label {
-			pointer-events: none;
-		}
-
-		.background {
-			fill: none;
-			border-style: solid;
-			border-width: 2px;
-			border-color: #b4b;
-		}
-
-	
-
-	</style>
 	<head>
-		<script src='https://cdn.firebase.com/js/client/2.0.4/firebase.js'></script>
+		<script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js'></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src='/js/client.js'></script>
 	</head>
-	<body>
+	<body ng-app="county-log" ng-controller="MainCtrl">
 
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container">
@@ -82,6 +53,7 @@
 						<button type="button" id="reset-button" class="btn btn-primary btn-xs"> Reset View </button>		
 			
 				</div>
+
 			</div></center>
 			</div>
 			<div class="container">
@@ -91,7 +63,7 @@
 					
 		</div>
 
-		<div id="list"></div>	
+		<div id="list"></div>
 
 
 		<script src="/js/d3.v3.min.js"></script>
@@ -108,6 +80,13 @@
 
 			var visited = [];
 			var visitedId = [];
+
+			var colorEnum = {
+				EMPTY : "white",
+				VISITED : "#BEEB9F",
+				STAYED : "#00A388",
+				HOVER : "#e5f7d9"
+			}
 
 
 			var svg = d3.select("#canvas").append("svg")
@@ -165,7 +144,17 @@
 				.attr("width", width)
 				.attr("height", height)
 
+			$.get("/entries", function(data) {
+					if(data) {
+						for(var i = 0; i < data.length; i++)
+						{
+							visitedId.push(data[i].id);
+							visited.push(data[i]);
+						}
 
+						updateStats();
+					}
+				});
 
 			d3.json("assets/us.json", function(err, us) {
 				if(err)
@@ -179,7 +168,9 @@
 					.attr("class", "county")
 					.attr("d", path)
 					.style("fill", function(d) {
-						return "white";		// setting fill color this way increases performance for reasons I dont understand
+						if(visitedId.indexOf(d.id) != -1)
+							return colorEnum.STAYED;
+						return colorEnum.EMPTY;		// setting fill color this way increases performance for reasons I dont understand
 					})
 					.style("stroke", "#ccc")
 					.style("stroke-width", "0.5px");
@@ -215,7 +206,7 @@
 
 						if(visitedId.indexOf(d.id) === -1)
 							d3.select(this)
-								.style("fill", "#e5f7d9");
+								.style("fill", colorEnum.HOVER);
 					})
 					.on("click", function(d) {
 						if(d3.event.defaultPrevented) return;
@@ -227,7 +218,7 @@
 					.on("mouseout", function(d) {
 						if(visitedId.indexOf(d.id) === -1)
 							d3.select(this)
-								.style("fill", "white");
+								.style("fill", colorEnum.EMPTY);
 					});
 					
 				// Create hover tooltip
@@ -245,6 +236,9 @@
 						return d.properties.NAME;
 					});
 
+
+
+
 				// function to toggle county status between stayed, visited, empty
 				var toggleStatus = function(d) {
 					if(visitedId.indexOf(d.id) === -1)
@@ -256,6 +250,15 @@
 							"stayed" : true
 						});
 
+						d3.xhr('/entries')
+							.header("Content-Type", "application/json")
+							.post(
+								JSON.stringify({id: d.id, name: d.properties.NAME, stayed: true}),
+								function(err, data) {
+									if(err)
+										return err;
+						});
+
 						// add to county list
 						countyList
 							.append("li")
@@ -264,27 +267,36 @@
 							})
 							.attr("id", function() {
 								return d.id;
-							})
+							});
 
-						stats
-							.text("Visited " + visited.length + " out of " + NUM_COUNTIES + " counties (" + (visited.length * 100/NUM_COUNTIES).toFixed(3) + "%)");
-						return "#00A388";
+						updateStats();
+						return colorEnum.STAYED;
 					} else {
 						var index = visitedId.indexOf(d.id);
 						if(visited[index].stayed)
 						{
 							visited[index].stayed = false;
-							return "#BEEB9F";
+							return colorEnum.VISITED;
 						} else {
-							// remove from county list
-							d3.select("#" + d.id)
-								.text(""); 			// TODO - actually remove the div
-							visited.splice(index, 1);
-							visitedId.splice(index, 1);
-							stats.text("Visited " + visited.length + " out of " + NUM_COUNTIES + " counties (" + (visited.length*100/NUM_COUNTIES).toFixed(3) + "%)");
-							return "white";
+							// send delete request
+							$.ajax({
+								url : "/entries",
+								type : "DELETE",
+								data : {id: d.id},
+								success: function(err, data) {
+										// remove from county list
+										d3.select("#" + d.id)
+											.data([])
+											.exit()
+											.remove();
+										visited.splice(index, 1);
+										visitedId.splice(index, 1);
+										updateStats();
+										
+									}
+							});
+							return colorEnum.EMPTY;
 						}
-
 					}
 				}
 			
@@ -431,7 +443,10 @@
 			d3.select("#road")
 				.text("")
 		}
-			
+		
+		function updateStats() {
+			stats.text("Visited " + visited.length + " out of " + NUM_COUNTIES + " counties (" + (visited.length*100/NUM_COUNTIES).toFixed(3) + "%)");
+		}
 
 			
 		</script>

@@ -21,3 +21,27 @@ div {
 	font-size: 10px;
 }
 
+.datalabel {
+	color: #b3b;
+}
+
+.navbar {
+	border-bottom: 2px #FF6138;
+}
+
+.thin-line {
+	border-bottom: thick #FF6138;
+	color: #FF6138;
+}
+
+.city .city-label {
+	pointer-events: none;
+}
+
+.background {
+	fill: none;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #b4b;
+}
+
