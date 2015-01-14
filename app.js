@@ -14,11 +14,13 @@ var app = express();
 var mongoose = require('mongoose');
 
 
-if (app.get('env') === 'development') {
+if (process.env.env === 'development') {
     mongoose.connect('mongodb://localhost:27017/county-log');
     console.log("Connecting to Test Mongo");
 } else {
-    //mongoose.connect('mongodb://skronch:qwe123@ds035270.mongolab.com:35270/heroku_app29348857');
+    var username = process.env.mongolab_username;
+    var password = process.env.mongolab_password;
+    mongoose.connect('mongodb://' + username + ':' + password + '@ds031641.mongolab.com:31641/heroku_app33202134');
     console.log("Connecting to Prod Mongo");
 }
 
