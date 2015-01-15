@@ -10,6 +10,14 @@
 
 div {
 	font-family: europa;
+
+}
+
+
+svg {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #ccc;
 }
 
 .city {
@@ -27,11 +35,6 @@ div {
 
 .navbar {
 	border-bottom: 2px #FF6138;
-}
-
-.thin-line {
-	border-bottom: thick #FF6138;
-	color: #FF6138;
 }
 
 .city .city-label {

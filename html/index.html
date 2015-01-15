@@ -5,9 +5,7 @@
 	<link href="/css/style.css" rel="stylesheet"/>
 
 	<head>
-		<script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js'></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-		<script src='/js/client.js'></script>
 	</head>
 	<body ng-app="county-log" ng-controller="MainCtrl">
 
@@ -168,8 +166,13 @@
 					.attr("class", "county")
 					.attr("d", path)
 					.style("fill", function(d) {
-						if(visitedId.indexOf(d.id) != -1)
-							return colorEnum.STAYED;
+						var visitedIndex = visitedId.indexOf(d.id);
+						if(visitedIndex != -1) {
+							if(visited[visitedIndex].stayed)
+								return colorEnum.STAYED;
+							else
+								return colorEnum.VISITED;
+						}
 						return colorEnum.EMPTY;		// setting fill color this way increases performance for reasons I dont understand
 					})
 					.style("stroke", "#ccc")
@@ -249,32 +252,43 @@
 							"name" : d.properties.NAME,
 							"stayed" : true
 						});
+						
+						// Post to API
+						$.ajax({
+								url : "/entries",
+								type : "POST",
+								data : {id: d.id, name:d.properties.NAME, stayed:true},
+								success: function(err, data) {
 
-						d3.xhr('/entries')
-							.header("Content-Type", "application/json")
-							.post(
-								JSON.stringify({id: d.id, name: d.properties.NAME, stayed: true}),
-								function(err, data) {
-									if(err)
-										return err;
+										// add to county list
+										countyList
+											.append("li")
+											.text(function() {
+												return d.properties.NAME;
+											})
+											.attr("id", function() {
+												return d.id;
+											});
+
+										updateStats();
+									}
 						});
 
-						// add to county list
-						countyList
-							.append("li")
-							.text(function() {
-								return d.properties.NAME;
-							})
-							.attr("id", function() {
-								return d.id;
-							});
-
-						updateStats();
+						
 						return colorEnum.STAYED;
 					} else {
 						var index = visitedId.indexOf(d.id);
 						if(visited[index].stayed)
 						{
+
+							// Put updated entry to API
+							// Post to API
+							$.ajax({
+									url : "/entries",
+									type : "PUT",
+									data : {id: d.id, name:d.properties.NAME, stayed:false},
+							});
+
 							visited[index].stayed = false;
 							return colorEnum.VISITED;
 						} else {
@@ -384,39 +398,12 @@
 			g.selectAll(".road-hover")
 				.on("mouseover", null)
 				.on("mouseout", null);
-			/*g.selectAll(".county")
-				.on("mouseover", null)
-				.on("mouseout", null);*/
 		}
 
 		function enableHover() {
 			g.selectAll(".road-hover")
 				.on("mouseover", roadMouseover)
 				.on("mouseout", roadMouseout);
-
-			/*g.selectAll(".county")
-				.on("mouseover", function(d) {	
-					d3.select(".arc-label")
-						.text(function() {
-							return d.properties.NAME;
-						});
-
-					if(visitedId.indexOf(d.id) === -1)
-						d3.select(this)
-							.style("fill", "#e5f7d9");
-				})
-				.on("click", function(d) {
-					if(d3.event.defaultPrevented) return;
-					d3.select(this)
-						.transition()
-						.duration(500)
-						.style("fill", toggleStatus(d));
-				})
-				.on("mouseout", function(d) {
-					if(visitedId.indexOf(d.id) === -1)
-						d3.select(this)
-							.style("fill", "white");
-				});*/
 		}
 
 

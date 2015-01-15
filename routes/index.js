@@ -33,6 +33,18 @@ router.post('/entries', function(req, res, next) {
 	});
 });
 
+/* PUT - modifies an existing county entry */
+router.put('/entries', function(req, res, next) {
+	Entry.update({id: req.body.id},  {$set: {stayed: req.body.stayed}}, function(err, entry) {
+		if (err) {
+			return next(err);
+		}
+
+		res.json(entry);
+		
+	});
+});
+
 /* DELETE - deletes a county entry */
 router.delete('/entries', function(req, res, next) {
 	Entry.find({id: req.body.id}).remove(function (err, entries) {
