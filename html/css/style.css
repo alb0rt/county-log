@@ -10,9 +10,7 @@
 
 div {
 	font-family: europa;
-
 }
-
 
 svg {
 	border-style: solid;
@@ -27,6 +25,7 @@ svg {
 .city-label {
 	font-family: europa-light;
 	font-size: 10px;
+	pointer-events:none;
 }
 
 .datalabel {
@@ -35,10 +34,6 @@ svg {
 
 .navbar {
 	border-bottom: 2px #FF6138;
-}
-
-.city .city-label {
-	pointer-events: none;
 }
 
 .background {

@@ -102,6 +102,7 @@
 				.on("zoomend", enableHover);
 
 			var tooltip;
+			var conties;
 			var countyList = d3.select("#list").append("ul");
 
 			var NUM_COUNTIES = 3234;
@@ -159,7 +160,7 @@
 					return console.error(err);
 
 				// Draw counties as features
-				g.selectAll(".county")
+				counties = g.selectAll(".county")
 					.data(topojson.feature(us, us.objects.counties).features)
 					.enter()
 					.append("path")
@@ -333,17 +334,19 @@
 						.style("stroke-width", "0.5px")
 						.style("z-index", "100");
 
-					g.selectAll(".road-hover")
-						.data(topojson.feature(us, us.objects.roads).features)
-						.enter()
-						.append("path")
-						.attr("class", "road-hover")
-						.attr("d", path)
-						.attr("display", "none")
-						.style("stroke", "black")
-						.style("opacity", "0")
-						.style("stroke-width", "13px")
-						.style("fill", "none");
+
+						// Removing road hover ability until can resolve the issue where county hover is being obstructed by road hover
+					// g.selectAll(".road-hover")
+					// 	.data(topojson.feature(us, us.objects.roads).features)
+					// 	.enter()
+					// 	.append("path")
+					// 	.attr("class", "road-hover")
+					// 	.attr("d", path)
+					// 	.attr("display", "none")
+					// 	.style("stroke", "black")
+					// 	.style("opacity", "0")
+					// 	.style("stroke-width", "13px")
+					// 	.style("fill", "none");
 
 					// define mouseover functionality for road overlay
 					g.selectAll(".road-hover")
@@ -390,6 +393,7 @@
 			});
 		
 		function zoomed() {
+			counties.style("stroke-width", 0.5 / d3.event.scale + "px");
 			g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 			
 		}
