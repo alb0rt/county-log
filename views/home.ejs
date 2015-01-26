@@ -1,0 +1,65 @@
+<!-- views/home.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ./head %>
+</head>
+<body>
+
+    <header>
+        <% include ./header %>
+    </header>
+
+    <div class="container-fluid data-container">
+			<div class="col-md-4">
+				<div id="county" class="datalabel"></div>
+				<div class="sub-datalabel">County</div>
+			</div>
+			<div class="col-md-4">
+				<div id="stats" class="datalabel" class="text-center"></div>
+				<div class="sub-datalabel">Your progress</div>
+			</div>
+			<div class="col-md-4">
+				<div class="dropdown text-center">
+					<a href="" class="dropdown-toggle datalabel" data-toggle="dropdown" role="button" aria-expanded="false">Map Controls<span class="caret"></span></a>
+					<ul class="dropdown-menu dropdown-menu-form" role="menu">
+						<li>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="highway-checkbox"> Interstate Highways
+								</label>
+							</div>
+						</li>
+						<li>
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="city-checkbox"> City Labels
+								</label>
+							</div>
+						</li>
+						<li>
+							<button type="button" id="reset-button" class="btn btn-primary btn-xs"> Reset Zoom </button>	
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="jumbotron">
+			<div class="container">
+				<center><div id="canvas"></div></center>
+			</div>
+		</div>
+
+		<div id="list"></div>
+
+		<script src="/js/d3.v3.min.js"></script>
+		<script src="/js/topojson.v1.min.js"></script>
+		<script src="/js/map.js"></script>
+
+		<% include ./footer %>
+
+</body>
+</html>

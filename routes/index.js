@@ -4,57 +4,99 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Entry = mongoose.model('Entry');
 
-/* GET home page. */
-router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
-});
+var isAuthenticated = function(req, res, next) {
+	if(req.isAuthenticated())
+		return next();
+	else
+		res.redirect('/');
+}
 
-/* GET - returns a list of all county entries */
-router.get('/entries', function (req, res, next) {
-	Entry.find(function(err, entries) {
-		if (err) {
-			return next(err);
-		}
+module.exports = function(passport) {
 
-		res.json(entries);
+	/* GET home page. */
+	router.get('/', function(req, res) {
+		res.render('index', {message: req.flash('message')});
 	});
-});
 
-/* POST - creates a new county entry */
-router.post('/entries', function(req, res, next) {
-	var entry = new Entry(req.body);
+	/* Handle Login POST */
+	router.post('/login', passport.authenticate('login', {
+		successRedirect: '/home',
+		failureRedirect: '/',
+		failureFlash : true  
+	}));
 
-	entry.save(function(err, entries) {
-		if (err) {
-			return next(err);
-		}
-
-		res.json(entries);
+	/* GET Registration Page */
+	router.get('/signup', function(req, res){
+		res.render('register',{message: req.flash('message')});
 	});
-});
 
-/* PUT - modifies an existing county entry */
-router.put('/entries', function(req, res, next) {
-	Entry.update({id: req.body.id},  {$set: {stayed: req.body.stayed}}, function(err, entry) {
-		if (err) {
-			return next(err);
-		}
+	/* Handle Registration POST */
+	router.post('/signup', passport.authenticate('signup', {
+		successRedirect: '/home',
+		failureRedirect: '/signup',
+		failureFlash : true  
+	}));
 
-		res.json(entry);
-		
+	/* GET Home Page */
+	router.get('/home', isAuthenticated, function(req, res){
+		res.render('home', { user: req.user });
 	});
-});
 
-/* DELETE - deletes a county entry */
-router.delete('/entries', function(req, res, next) {
-	Entry.find({id: req.body.id}).remove(function (err, entries) {
-		if (err) {
-			return next(err);
-		}
-
-		res.json(entries);
+	/* Handle Logout */
+	router.get('/logout', function(req, res) {
+		req.logout();
+		res.redirect('/');
 	});
-});
 
+	/* GET - returns a list of all county entries */
+	router.get('/entries', isAuthenticated, function (req, res, next) {
+		Entry.find({username: req.user.username}, function(err, entries) {
+			if (err) {
+				return next(err);
+			}
 
-module.exports = router;
+			res.json(entries);
+		});
+	});
+
+	/* POST - creates a new county entry */
+	router.post('/entries', isAuthenticated, function(req, res, next) {
+		req.body.username = req.user.username;
+		var entry = new Entry(req.body);
+
+		entry.save(function(err, entries) {
+			if (err) {
+				return next(err);
+			}
+
+			res.json(entries);
+		});
+	});
+
+	/* PUT - modifies an existing county entry */
+	router.put('/entries', isAuthenticated, function(req, res, next) {
+		Entry.update({id: req.body.id, username: req.user.username},  {$set: {stayed: req.body.stayed}}, function(err, entry) {
+			if (err) {
+				return next(err);
+			}
+
+			res.json(entry);
+			
+		});
+	});
+
+	/* DELETE - deletes a county entry */
+	router.delete('/entries', isAuthenticated, function(req, res, next) {
+		Entry.find({id: req.body.id, username: req.user.username}).remove(function (err, entries) {
+			if (err) {
+				return next(err);
+			}
+
+			res.json(entries);
+		});
+	});
+
+	return router;
+
+}
+// module.exports = router;

@@ -192,7 +192,7 @@ d3.json("assets/us.json", function(err, us) {
 			$.ajax({
 					url : "/entries",
 					type : "POST",
-					data : {id: d.id, name:d.properties.NAME, stayed:true},
+					data : {id: d.id, county:d.properties.NAME, stayed:true},
 					success: function(err, data) {
 
 							// add to county list
@@ -220,7 +220,7 @@ d3.json("assets/us.json", function(err, us) {
 				$.ajax({
 						url : "/entries",
 						type : "PUT",
-						data : {id: d.id, name:d.properties.NAME, stayed:false},
+						data : {id: d.id, county:d.properties.NAME, stayed:false},
 				});
 
 				visited[index].stayed = false;

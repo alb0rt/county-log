@@ -3,8 +3,9 @@ var mongoose = require("mongoose");
 
 var EntrySchema = new mongoose.Schema({
     id : String,
-    name : String,
-    stayed : Boolean
+    county : String,
+    stayed : Boolean,
+    username : String
 });
 
 mongoose.model("Entry", EntrySchema);
