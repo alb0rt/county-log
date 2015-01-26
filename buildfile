@@ -1,3 +1,6 @@
+# This file documents the steps taken to generate the json files used for the site
+
+
 # Map Generation
 
 topojson -o counties.json --projection='width=960, height=600, d3.geo.albersUsa().scale(1280).translate([width/2, height/2]);' --simplify=.6 --filter=none --id-property NAME+COUNTYNS --properties NAME --properties COUNTYFP --properties STATEFP -- counties=cb_2013_us_county_5m.shp
