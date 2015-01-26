@@ -8,6 +8,10 @@
 	src: url('../assets/Europa-Light.otf');
 }
 
+body {
+	padding-top: 60px;
+}
+
 div {
 	font-family: europa;
 }
@@ -16,6 +20,18 @@ svg {
 	border-style: solid;
 	border-width: 1px;
 	border-color: #ccc;
+}
+
+.dropdown-menu-form {
+	padding: 5px 10px 5px;
+}
+
+.jumbotron {
+	padding: 15px 15px;
+}
+
+.data-container {
+	border-bottom: 2px solid #b3b;
 }
 
 .city {
@@ -29,11 +45,15 @@ svg {
 }
 
 .datalabel {
+	text-align: center;
 	color: #b3b;
 }
 
-.navbar {
-	border-bottom: 2px #FF6138;
+.sub-datalabel {
+	text-align: center;
+	color: #bbb;
+	font-size: 8px;
+	padding-bottom: 3px;
 }
 
 .background {
