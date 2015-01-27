@@ -5,8 +5,15 @@ $('.dropdown-menu').on('click', function(e) {
 	}
 });
 
-var width = 960,
-	height = 600;
+// scale the map according to width available in window
+var margin = {top : 10, left : 10, bottom : 10, right : 10}
+	, width = parseInt(d3.select("#canvas").style("width"))
+	, width = width - margin.left - margin.right
+	, mapRatio = 0.625
+	, height = width * mapRatio
+	, originalWidth	= 960			// width of projection baked into the topojson file
+	, scaleRatio = width / originalWidth;
+
 
 var svg = d3.select("#canvas").append("svg")
 	.attr("width", width)
@@ -29,7 +36,7 @@ var g = svg.append("g");
 
 var zoom = d3.behavior.zoom()
 	.translate([0, 0])
-	.scale(1)
+	.scale(scaleRatio)
 	.scaleExtent([1, 12])
 	.on("zoomstart", disableHover)
 	.on("zoom", zoomed)
@@ -158,6 +165,11 @@ d3.json("assets/us.json", function(err, us) {
 				.text(function() {
 					return d.properties.NAME;
 				});
+			d3.select("#sub-county")
+				.text(function() {
+					return statefp[Number.parseInt(d.properties.STATEFP)];
+				});
+
 
 			if(visitedId.indexOf(d.id) === -1)
 				d3.select(this)
@@ -318,6 +330,9 @@ d3.json("assets/us.json", function(err, us) {
 
 	});
 	
+	// scale the map according to canvas size
+	g.attr("transform",  "scale( "+  scaleRatio + ")");
+
 	svg.call(zoom)	
 
 	// disable double click zoom
@@ -378,4 +393,58 @@ function roadMouseout(d) {
 
 function updateStats() {
 	stats.text("Visited " + visited.length + " out of " + NUM_COUNTIES + " counties (" + (visited.length*100/NUM_COUNTIES).toFixed(3) + "%)");
+}
+
+var statefp = {
+	01: "Alabama",
+	02: "Alaska",
+	04: "Arizona",
+	05: "Arkansas",
+	06: "California",
+	08: "Colorado",
+	09: "Connecticut",
+	10: "Delaware",
+	11: "District of Columbia",
+	12: "Florida",
+	13: "Georgia",
+	15: "Hawaii",
+	16: "Idaho",
+	17: "Illinois",
+	18: "Indiana",
+	19: "Iowa",
+	20: "Kansas",
+	21: "Kentucky",
+	22: "Louisiana",
+	23: "Maine",
+	24: "Maryland",
+	25: "Massachusetts",
+	26: "Michigan",
+	27: "Minnesota",
+	28: "Mississippi",
+	29: "Missouri",
+	30: "Montana",
+	31: "Nebraska",
+	32: "Nevada",
+	33: "New Hampshire",
+	34: "New Jersey",
+	35: "New Mexico",
+	36: "New York",
+	37: "North Carolina",
+	38: "North Dakota",
+	39: "Ohio",
+	40: "Oklahoma",
+	41: "Oregon",
+	42: "Pennsylvania",
+	44: "Rhode Island",
+	45: "South Carolina",
+	46: "South Dakota",
+	47: "Tennessee",
+	48: "Texas",
+	49: "Utah",
+	50: "Vermont",
+	51: "Virginia",
+	53: "Washington",
+	54: "West Virginia",
+	55: "Wisconsin",
+	56: "Wyoming"
 }

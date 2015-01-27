@@ -7,10 +7,15 @@ module.exports = function(passport) {
 		passReqToCallback : true
 	},
 	function(req, username, password, done) {
+
+		var usernameLower = username.toLowerCase();
+
 		findOrCreateUser = function() {
-			User.findOne({ 'username' : username}, function(err, user) {
-				if(err)
-					return done(err);
+			User.findOne({ 'username' : usernameLower}, function(err, user) {
+				if(err) {
+					console.error(err);
+					return done(null, false, req.flash("message", "Unknown error occured"));
+				}
 
 				if(user) {
 					console.log("User: " + username + " already exists");
@@ -18,20 +23,34 @@ module.exports = function(passport) {
 				}
 
 				else {
-					var newUser = new User();
-
-					newUser.username = username;
-					newUser.password = createHash(password);
-					newUser.email = req.param("email");
-
-					newUser.save(function(err) {
-						if(err) {
-							console.log("Saving user error");
-							throw err;
+					User.findOne({'email' : req.param("email")}, function(err, user) {
+						if(err){
+							console.error(err);
+							return done(null, false, req.flash("message", "Unknown error occured"));
 						}
 
-						return done(null, newUser);
-					});
+						if(user) {
+							console.log("Email: " + req.param("email") + " already exists");
+							return done(null, false, req.flash("message", "Email already exists"))
+						}
+
+						else {
+							var newUser = new User();
+
+							newUser.username = usernameLower;
+							newUser.password = createHash(password);
+							newUser.email = req.param("email");
+
+							newUser.save(function(err) {
+								if(err) {
+									console.log("Saving user error");
+									throw err;
+								}
+
+								return done(null, newUser);
+							});
+						}
+					});		
 				}
 			});
 		};
@@ -40,6 +59,7 @@ module.exports = function(passport) {
 	}));
 
 	var createHash = function(password) {
+		// TODO: Change to async method
 		return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 	}
 }

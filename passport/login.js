@@ -7,10 +7,12 @@ module.exports = function(passport) {
 		passReqToCallback: true
 	},
 	function(req, username, password, done) {
-		User.findOne({'username' : username},
+		User.findOne({'username' : username.toLowerCase()},
 			function(err, user) {
-				if(err)
-					return done(err);
+				if(err){
+					console.error(err);
+					return done(null, false, req.flash("message", "Unknown error occured"));
+				}
 
 				if(!user) {
 					console.log("User: " + username + " not found");
@@ -29,6 +31,7 @@ module.exports = function(passport) {
 	);
 
 	var isValidPassword = function(user, password) {
+		// TODO: change to async method
 		return bcrypt.compareSync(password, user.password);
 	}
 }

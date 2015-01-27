@@ -22,18 +22,28 @@ svg {
 	border-color: #ccc;
 }
 
-.dropdown-menu-form {
-	padding: 5px 10px 5px;
-}
+/*bootstrap overrides*/
 
 .jumbotron {
 	padding: 15px 15px;
 	background-color: #fafafa;
 }
 
-.data-container {
-	border-bottom: 2px solid #b3b;
+.alert {
+	margin-left: 30px;
+	margin-right: 30px;
 }
+
+/*end bootstrap overrides*/
+
+.dropdown-menu-form {
+	padding: 5px 10px 5px;
+}
+
+.data-container {
+	border-bottom: 2px solid #FF6138;
+}
+
 
 .city {
 	fill: #FF6138;
@@ -47,7 +57,7 @@ svg {
 
 .datalabel {
 	text-align: center;
-	color: #b3b;
+	color: #FF6138;
 }
 
 .sub-datalabel {
@@ -106,6 +116,10 @@ svg {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+.form-signin input[type="email"]{
+	margin-bottom: 10px;
+}
+
 .account-wall{
     margin-top: 20px;
     padding: 40px 0px 20px 0px;
@@ -139,7 +153,7 @@ svg {
 }
 .new-account{
     display: block;
-    margin-top: 10px;
+    margin-top: 11px;
 }
 h1.error-message{
     color: red;
