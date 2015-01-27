@@ -76,7 +76,7 @@ d3.select("#reset-button")
 	.on("click", function() {
 		g.transition()
 			.duration(750)
-			.attr("transform", "translate([0,0]).scale(1)");
+			.attr("transform", "translate([0,0]).scale("+scaleRatio+")");
 	})
 
 // Draw canvas border

@@ -13,7 +13,14 @@ topojson-merge -o us.json --io=states --oo=nation -- states.json
 
 ogr2ogr -f GeoJSON -where "ISO_A2 = 'US' AND SCALERANK < 4" places.json ne_10m_populated_places.shp
 
-topojson -o cities.json --projection='width=0, height=600, d3.geo.albersUsa().scale(1280).translate([width/2, height/2]);' ---id-property NAME+ADM1NAME --properties name=NAME --properties SCALERANK --properties FEATURECLA -- places.json
+topojson -o cities.json --projection='width=0, height=600, d3.geo.albersUsa().scale(1280).translate([width/2, height/2]);' --id-property NAME+ADM1NAME --properties name=NAME --properties SCALERANK --properties FEATURECLA -- places.json
+
+# City database generation
+
+ogr2ogr -f GeoJSON -where "ISO_A2 = 'US'" places.json ne_10m_populated_places.shp
+
+topojson -o allcities.json --projection='width=960, height=600, d3.geo.albersUsa().scale(1280).translate([width/2, height/2]);' --properties name=NAME --properties state=ADM1NAME --properties SCALERANK --properties FEATURECLA -- places.json 
+
 
 # Road overlay generation
 

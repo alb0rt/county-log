@@ -12,7 +12,27 @@
 				</div>
 
 				<div id="navbar-collapse-1" class="navbar-collapse collapse">
+					<% if(locals.user) { %>
 
+						<div ng-app="map_search" ng-controller="search_controller">
+
+							<form class="navbar-left navbar-form" role="search">
+								<div class="form-group">
+									<input type="search" class="form-control" ng-model="search" placeholder="Search city">
+										<ul ng-show="search.length"class="search-result">
+											<li ng-show="search.length" ng-repeat="city in filtered = (cities | filter:search | orderBy:'properties.name' | limitTo:10)">
+												{ city.properties.name }} | {{ city.properties.state }}							
+											</li>
+											<li ng-show="!filtered.length">
+												No results 
+											</li>
+										</ul>
+								</div>
+								<button type="submit" class="btn btn-default">Search</button>
+							</form>
+						</div>
+
+					<% } %>
 					<ul class="nav navbar-nav navbar-right">
 						<% if(locals.user) { %>
 							<li class="dropdown">

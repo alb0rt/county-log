@@ -161,3 +161,15 @@ h1.error-message{
 ul.user-details{
     list-style: none;
 }
+.search-result{
+	z-index:5;
+	position:absolute;
+	background-color: white;
+	padding: 10px 15px 10px;
+}
+ul.search-result{
+	list-style: none;
+	margin-top: 4px;
+	border-radius: 4px;
+	box-shadow: 5px 5px 5px #aaa;
+}
