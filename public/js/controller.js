@@ -2,6 +2,50 @@ var app = angular.module('map_search', []);
 
 app.controller('search_controller',function($scope,$http){
 
+	$scope.selectCity = function(city) {
+
+    var transform = {
+    "scale": [
+      0.09367127658008773,
+      0.057481546292942144
+    ],
+    "translate": [
+      -0.5740893541717185,
+      20.09311956942065
+    ]
+    };
+
+    for(var i = 0; i < 2; i++) {
+      city.coordinates[i] = city.coordinates[i] * transform.scale[i] + transform.translate[i];
+    }
+
+    var a = [city];
+
+    g.selectAll(".test")
+      .data(a)
+      .enter()
+      .append("circle")
+      .attr("transform", function(d) {
+        return "translate(" + d.coordinates + ")";
+      })
+      .attr("r", 2)
+      .attr("class", "city")
+
+    g.selectAll(".test-label")
+      .data(a)
+      .enter()
+      .append("text")
+      .attr("class", "city-label")
+      .attr("transform", function(d) {
+        return "translate(" + d.coordinates + ")";
+      })
+      .attr("dy", "0.35em")
+      .attr("x", 6)
+      .text(function(d) {
+        return d.properties.name;
+      });
+	 };
+
       $scope.cities = [
         {
           "type": "Point",

@@ -303,7 +303,6 @@ d3.json("assets/us.json", function(err, us) {
 	d3.json("assets/cities.json", function(err, us) {
 		if(err)
 			return console.error(err);
-
 		
 		cities = g.selectAll(".city")
 			.data(topojson.feature(us, us.objects.places).features)
@@ -329,7 +328,9 @@ d3.json("assets/us.json", function(err, us) {
 			});		
 
 	});
+
 	
+
 	// scale the map according to canvas size
 	g.attr("transform",  "scale( "+  scaleRatio + ")");
 

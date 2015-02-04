@@ -20,6 +20,8 @@ svg {
 	border-style: solid;
 	border-width: 1px;
 	border-color: #ccc;
+	border-radius: 7px;
+	background-color: rgb(242, 250, 255);
 }
 
 /*bootstrap overrides*/
@@ -161,15 +163,18 @@ h1.error-message{
 ul.user-details{
     list-style: none;
 }
-.search-result{
+.search-result-container{
 	z-index:5;
 	position:absolute;
 	background-color: white;
 	padding: 10px 15px 10px;
 }
-ul.search-result{
+ul.search-result-container{
 	list-style: none;
 	margin-top: 4px;
 	border-radius: 4px;
 	box-shadow: 5px 5px 5px #aaa;
+}
+.search-result{
+	cursor:pointer;
 }

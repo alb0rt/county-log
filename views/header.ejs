@@ -19,9 +19,9 @@
 							<form class="navbar-left navbar-form" role="search">
 								<div class="form-group">
 									<input type="search" class="form-control" ng-model="search" placeholder="Search city">
-										<ul ng-show="search.length"class="search-result">
+										<ul ng-show="search.length"class="search-result-container">
 											<li ng-show="search.length" ng-repeat="city in filtered = (cities | filter:search | orderBy:'properties.name' | limitTo:10)">
-												{ city.properties.name }} | {{ city.properties.state }}							
+												<a ng-click="selectCity(city)" class="search-result" id="{{city.properties.name+city.properties.state}}">{{ city.properties.name }} | {{ city.properties.state }}</a>							
 											</li>
 											<li ng-show="!filtered.length">
 												No results 
