@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
 
 var mongoose = require('mongoose');
 var Entry = mongoose.model('Entry');
@@ -95,6 +96,15 @@ module.exports = function(passport) {
 			res.json(entries);
 		});
 	});
+
+	router.get('/cities', isAuthenticated, function(req, res, next) {
+		fs.readFile('./public/assets/allcities.json', 'utf8', function(err, data) {
+			if(err)
+				return next(err);
+
+			res.json(data);
+		})
+	})
 
 	return router;
 

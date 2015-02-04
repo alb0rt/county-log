@@ -42,6 +42,8 @@ var zoom = d3.behavior.zoom()
 	.on("zoom", zoomed)
 	.on("zoomend", enableHover);
 
+var scale = 1;
+var sqrtScale = 1;
 var tooltip;
 var counties, cities, cityLabels, states, roads, nation;
 var countyList = d3.select("#list").append("ul");
@@ -307,8 +309,11 @@ d3.json("assets/us.json", function(err, us) {
 		cities = g.selectAll(".city")
 			.data(topojson.feature(us, us.objects.places).features)
 			.enter()
-			.append("path")
-			.attr("d", path.pointRadius(2))
+			.append("circle")
+			.attr("transform", function(d) {
+				return "translate(" + d.geometry.coordinates + ")";
+			})
+			.attr("r", 2)
 			.attr("class", "city")
 			.attr("display", "none");
 
@@ -342,12 +347,13 @@ d3.json("assets/us.json", function(err, us) {
 });
 
 function zoomed() {
-	var sqrtScale = Math.sqrt(d3.event.scale);
+	scale = d3.event.scale;
+	sqrtScale = Math.sqrt(d3.event.scale);
 	counties.style("stroke-width", 0.5 / d3.event.scale + "px");
 	states.style("stroke-width", 1 / d3.event.scale + "px");
 	nation.style("stroke-width", 1 / d3.event.scale + "px");
-	cities.attr("d", path.pointRadius(2/sqrtScale));
-	cityLabels.style("font-size", 10 / sqrtScale + "px")
+	d3.selectAll(".city").attr("r", 2 / sqrtScale);
+	d3.selectAll(".city-label").style("font-size", 10 / sqrtScale + "px")
 		.attr("dy", 0.35 / d3.event.scale + "em")
 		.attr("x", 6 / d3.event.scale);
 	roads.style("stroke-width", 1 / d3.event.scale + "px");
@@ -366,7 +372,6 @@ function enableHover() {
 		.on("mouseover", roadMouseover)
 		.on("mouseout", roadMouseout);
 }
-
 
 function roadMouseover(d) {
 	g.selectAll(".road")
