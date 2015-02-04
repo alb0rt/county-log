@@ -11,7 +11,7 @@
         <% include ./header %>
     </header>
 
-    <div class="container-fluid data-container">
+    <center><div class="container-fluid data-container">
 			<div class="col-md-4">
 				<div id="county" class="datalabel"></div>
 				<div id="sub-county" class="sub-datalabel">County</div>
@@ -21,31 +21,36 @@
 				<div class="sub-datalabel">Your progress</div>
 			</div>
 			<div class="col-md-4">
-				<div class="dropdown text-center">
-					<a href="" class="dropdown-toggle datalabel" data-toggle="dropdown" role="button" aria-expanded="false">Map Controls<span class="caret"></span></a>
-					<ul class="dropdown-menu dropdown-menu-form" role="menu">
-						<li>
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="highway-checkbox"> Interstate Highways
-								</label>
-							</div>
-						</li>
-						<li>
+				<a class="text-center datalabel btn-toggle">
+					Map Controls<span class="caret"></span></a>
+			</div>
+	</div></center>
 
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="city-checkbox"> City Labels
-								</label>
-							</div>
-						</li>
-						<li>
-							<button type="button" id="reset-button" class="btn btn-primary btn-xs"> Reset Zoom </button>	
-						</li>
-					</ul>
+	<center><div class="container-fluid sub-data-container">
+		<div class="row collapse-group">
+			<div class="col-md-4 collapse">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" id="highway-checkbox"> Interstate Highways
+					</label>
 				</div>
 			</div>
+			<div class="col-md-4 collapse">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" id="city-checkbox"> City Labels
+					</label>
+				</div>
+			</div>
+			<div class="col-md-4 collapse">
+				<button type="button" id="reset-button" class="btn btn-primary btn-xs" style="margin-top:10px"> Reset Zoom </button>	
+			</div>
 		</div>
+
+	</div></center>
+
+
+	
 
 		<div class="jumbotron">
 			<div class="container">

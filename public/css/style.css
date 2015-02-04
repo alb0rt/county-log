@@ -45,7 +45,9 @@ svg {
 .data-container {
 	border-bottom: 2px solid #FF6138;
 }
-
+.sub-data-container {
+	background-color: #f0f0f0;
+}
 
 .city {
 	fill: #FF6138;

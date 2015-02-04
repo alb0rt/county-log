@@ -5,6 +5,13 @@ $('.dropdown-menu').on('click', function(e) {
 	}
 });
 
+$('.btn-toggle').on('click', function(e) {
+    e.preventDefault();
+    var $this = $('.collapse-group');
+    var $collapse = $this.closest('.collapse-group').find('.collapse');
+    $collapse.collapse('toggle');
+});
+
 // scale the map according to width available in window
 var margin = {top : 10, left : 10, bottom : 10, right : 10}
 	, width = parseInt(d3.select("#canvas").style("width"))
