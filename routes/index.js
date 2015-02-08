@@ -124,7 +124,7 @@ module.exports = function(passport) {
 						res.redirect('/forgot');
 					}
 					console.log(user);
-					user.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10), null);
+					user.password = req.body.password;
 					user.resetPasswordToken = undefined;
 					user.resetPasswordExpires = undefined;
 

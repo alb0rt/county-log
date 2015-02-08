@@ -19,19 +19,21 @@ module.exports = function(passport) {
 					return done(null, false, req.flash("error", "User not found."));
 				}
 
-				if(!isValidPassword(user, password)) {
-					console.log("Invalid Password");
-					return done(null, false, req.flash("error", "Invalid Password"));
-				}
+				user.validatePassword(password, function(err, match) {
+					if(err) {
+						console.error(err);
+						return done(null, false, req.flash("error", "Unknown error occured"));
+					}
+					if(!match) {
+						console.log("Invalid Password");
+						return done(null, false, req.flash("error", "Invalid Password"));
+					} else {
+						return done(null, user)
+					}
+				});
 
-				return done(null, user);
 				}
 			);
 		})
 	);
-
-	var isValidPassword = function(user, password) {
-		// TODO: change to async method
-		return bcrypt.compareSync(password, user.password);
-	}
 }
