@@ -218,7 +218,6 @@ d3.json("assets/us.json", function(err, us) {
 						}
 			});
 
-			
 			return colorEnum.STAYED;
 		} else {
 			var index = visitedId.indexOf(d.id);
@@ -326,7 +325,6 @@ d3.json("assets/us.json", function(err, us) {
 			.text(function(d) {
 				return d.properties.name;
 			});		
-
 	});
 
 	

@@ -5,7 +5,7 @@ var async = require('async');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var bcrypt = require('bcrypt-nodejs');
-var secrets = require('../secrets')
+var config = require('../config/config');
 
 var mongoose = require('mongoose');
 var Entry = mongoose.model('Entry');
@@ -78,8 +78,8 @@ module.exports = function(passport) {
 				var transporter = nodemailer.createTransport({
 					service: 'hotmail',
 					auth: {
-						user: secrets.emailUsername,
-						pass: secrets.emailPassword
+						user: config.emailUsername,
+						pass: config.emailPassword
 					}
 				});
 
@@ -140,8 +140,8 @@ module.exports = function(passport) {
 				var transporter = nodemailer.createTransport({
 					service: 'hotmail',
 					auth: {
-						user: secrets.emailUsername,
-						pass: secrets.emailPassword
+						user: config.emailUsername,
+						pass: config.emailPassword
 					}
 				});
 				var mailOptions = {

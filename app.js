@@ -7,6 +7,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
+var config = require('./config/config');
 
 
 
@@ -16,12 +17,11 @@ var app = express();
 var mongoose = require('mongoose');
 
 if (process.env.env === 'production') {
-    var username = process.env.mongolab_username;
-    var password = process.env.mongolab_password;
-    mongoose.connect('mongodb://' + username + ':' + password + '@ds031641.mongolab.com:31641/heroku_app33202134');
+    mongoose.connect(config.mongoUri);
     console.log("Connecting to Prod Mongo");
 } else {
-    mongoose.connect('mongodb://localhost:27017/county-log');
+    mongoose.connect(config.mongoUri);
+    //mongoose.connect('mongodb://localhost:27017/county-log');
     console.log("Connecting to Test Mongo");
 }
 
