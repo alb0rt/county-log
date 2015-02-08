@@ -1,9 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
+var async = require('async');
+var crypto = require('crypto');
+var nodemailer = require('nodemailer');
+var bcrypt = require('bcrypt-nodejs');
+var secrets = require('../secrets')
 
 var mongoose = require('mongoose');
 var Entry = mongoose.model('Entry');
+var User = mongoose.model('User');
+
 
 var isAuthenticated = function(req, res, next) {
 	if(req.isAuthenticated())
@@ -16,7 +23,7 @@ module.exports = function(passport) {
 
 	/* GET home page. */
 	router.get('/', function(req, res) {
-		res.render('index', {message: req.flash('message')});
+		res.render('index', {message: req.flash('message'), error: req.flash('error')});
 	});
 
 	/* Handle Login POST */
@@ -38,6 +45,120 @@ module.exports = function(passport) {
 		failureFlash : true  
 	}));
 
+	/* GET Forgot Password Page */
+	router.get('/forgot', function(req, res) {
+		res.render('forgot', {message: req.flash('message'), error: req.flash('error')});
+	});
+
+	/* Handle Forgot Password POST */
+	router.post('/forgot', function(req, res, next) {
+		async.waterfall([
+			function(done) {
+				crypto.randomBytes(20, function(err, buf) {
+					var token = buf.toString('hex');
+					done(err, token);
+				});
+			},
+			function(token, done) {
+				User.findOne({ email: req.body.email }, function(err, user) {
+					if(!user){
+						req.flash('error', 'Email not found');
+
+						return res.redirect('/forgot');
+					}
+					user.resetPasswordToken = token;
+					user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+					user.save(function(err) {
+						done(err, token, user);
+					});
+				});
+			},
+			function(token, user, done) {
+				var transporter = nodemailer.createTransport({
+					service: 'hotmail',
+					auth: {
+						user: secrets.emailUsername,
+						pass: secrets.emailPassword
+					}
+				});
+
+				var mailOptions = {
+					to: user.email,
+					from: 'password-reset@county-map.com',
+					subject: 'Password Reset',
+					text: 'Reset your county-map password by going to http://' + req.headers.host + '/reset/' + token
+				};
+				transporter.sendMail(mailOptions, function(err) {
+					req.flash('message', 'Email sent! :)');
+					done(err, 'done');
+				});				
+			}
+
+			], function(err) {
+				if(err)
+					return next(err);
+				res.redirect('/');
+			});
+	});
+
+	/* GET Password reset page */
+	router.get('/reset/:token', function(req, res) {
+		User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() }}, function (err, user) {
+			if(!user) {
+				req.flash('error', 'Password reset token is invalid or has expired.');
+				return res.redirect('/forgot');
+			}
+			res.render('reset', { userDetails: req.user });
+		});
+	});
+
+	/* Handle Password Reset POST */
+	router.post('/reset/:token', function(req, res) {
+		async.waterfall([
+			function(done) {
+				User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() }}, function(err, user) {
+					if(!user) {
+						console.log("test");
+						req.flash('error', 'Password reset token is invalid or has expired.');
+						res.redirect('/forgot');
+					}
+					console.log(user);
+					user.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10), null);
+					user.resetPasswordToken = undefined;
+					user.resetPasswordExpires = undefined;
+
+					user.save(function(err) {
+						if(err)
+							return next(err);
+						req.flash('message', 'Password has been changed');
+						res.redirect('/');
+					});
+				});
+			},
+			function(user, done) {
+				var transporter = nodemailer.createTransport({
+					service: 'hotmail',
+					auth: {
+						user: secrets.emailUsername,
+						pass: secrets.emailPassword
+					}
+				});
+				var mailOptions = {
+					to: user.email,
+					from: 'password-reset@county-map.com',
+					subject: 'Password Reset',
+					text: 'Password successfully reset for account ' + user.username
+				};
+				transporter.sendMail(mailOptions, function(err) {
+					req.flash('message', 'Password changed!');
+					done(err);
+				});
+			}], function(err) {
+				res.redirect('/');
+			});
+	})
+
 	/* GET Home Page */
 	router.get('/home', isAuthenticated, function(req, res){
 		res.render('home', { user: req.user });
@@ -48,6 +169,9 @@ module.exports = function(passport) {
 		req.logout();
 		res.redirect('/');
 	});
+
+
+
 
 	/* GET - returns a list of all county entries */
 	router.get('/entries', isAuthenticated, function (req, res, next) {

@@ -60,6 +60,7 @@ module.exports = function(passport) {
 
 	var createHash = function(password) {
 		// TODO: Change to async method
-		return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+
+		 return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 	}
 }

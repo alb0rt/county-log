@@ -156,7 +156,7 @@ svg {
     border-radius: 50%;
 }
 .new-account{
-    display: block;
+    display: inline-block;
     margin-top: 11px;
 }
 h1.error-message{

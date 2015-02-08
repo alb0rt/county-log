@@ -1,0 +1,42 @@
+<!-- views/forgot.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ./head %>
+</head>
+
+
+<body class="container">
+
+    <header>
+        <% include ./header %>
+    </header>
+
+    <div class="container">
+    	<div class="row">
+    		<div class="col-sm-6 col-md-4 col-md-offset-4">
+    			<h1 class="text-center login-title">Lost Password?</h1>
+    				<div class="signup-wall">
+    					<% if(message.length > 0) {  %>
+    						<div class="text-center alert alert-success" role="alert"><%= message %>
+    						</div>
+    					<% } %>
+    					<% if(error.length > 0) {  %>
+    						<div class="text-center alert alert-danger" role="alert"><%= error %>
+    						</div>
+    					<% } %>
+    					<form class="form-signin" action="/forgot" method="POST">
+    						<input type="email" name="email" class="form-control" placeholder="Email" required autofocus>
+    						<button class="btn btn-md btn-primary btn-block" type="submit">Reset Password</button>
+    						<span class="clearfix"></span>
+						</form>
+					</div>
+			</div>
+    	</div>
+    </div>
+
+    <% include ./footer %>
+
+</body>
+</html>

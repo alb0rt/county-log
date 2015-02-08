@@ -11,17 +11,17 @@ module.exports = function(passport) {
 			function(err, user) {
 				if(err){
 					console.error(err);
-					return done(null, false, req.flash("message", "Unknown error occured"));
+					return done(null, false, req.flash("error", "Unknown error occured"));
 				}
 
 				if(!user) {
 					console.log("User: " + username + " not found");
-					return done(null, false, req.flash("message", "User not found."));
+					return done(null, false, req.flash("error", "User not found."));
 				}
 
 				if(!isValidPassword(user, password)) {
 					console.log("Invalid Password");
-					return done(null, false, req.flash("message", "Invalid Password"));
+					return done(null, false, req.flash("error", "Invalid Password"));
 				}
 
 				return done(null, user);

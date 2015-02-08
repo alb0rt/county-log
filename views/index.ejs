@@ -18,17 +18,24 @@
 					<h1 class="text-center login-title">Sign in to County Map</h1>
 					<div class="account-wall">
 						<% if(locals.message.length > 0) { %>
-							<div class="text-center alert alert-danger" role="alert"><%= message %>
+							<div class="text-center alert alert-success" role="alert"><%= message %>
 							</div>
 						<% } %>
+						<% if(locals.error.length > 0) {  %>
+    						<div class="text-center alert alert-danger" role="alert"><%= error %>
+    						</div>
+    					<% } %>
 						<form class="form-signin" action="/login" method="POST">
 							<input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
 							<input type="password" name="password" class="form-control" placeholder="Password" required>
-							<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+							<button class="btn btn-md	 btn-primary btn-block" type="submit">Sign in</button>
 							<span class="clearfix"></span>
 						</form>
 					</div>
-					<a href="/signup" class="text-center new-account">Create a new account</a>
+					<div class="text-center">
+						<a href="/signup" class="new-account">Create a new account</a> | <a href="/forgot" class="new-account">
+						Forgot password?</a>
+					</div>
 					
 		</div>
 	</main>

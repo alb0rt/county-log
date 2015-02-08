@@ -53,7 +53,6 @@ var scale = 1;
 var sqrtScale = 1;
 var tooltip;
 var counties, cities, cityLabels, states, roads, nation;
-var countyList = d3.select("#list").append("ul");
 
 var NUM_COUNTIES = 3234;
 d3.select("#county")
@@ -152,7 +151,7 @@ d3.json("assets/us.json", function(err, us) {
 		.attr("class", "border")
 		.attr("d", path)
 		.style("fill", "none")
-		.style("stroke", "#000")
+		.style("stroke", "#777")
 		.style("stroke-width", "1px")
 		.style("z-index", "100");
 
@@ -164,7 +163,7 @@ d3.json("assets/us.json", function(err, us) {
 		.attr("class", "border")
 		.attr("d", path)
 		.style("fill", "none")
-		.style("stroke", "#000")
+		.style("stroke", "#777")
 		.style("stroke-width", "1px");
 
 	// Handle mouse interactions with counties
@@ -215,17 +214,6 @@ d3.json("assets/us.json", function(err, us) {
 					type : "POST",
 					data : {id: d.id, county:d.properties.NAME, stayed:true},
 					success: function(err, data) {
-
-							// add to county list
-							countyList
-								.append("li")
-								.text(function() {
-									return d.properties.NAME;
-								})
-								.attr("id", function() {
-									return d.id;
-								});
-
 							updateStats();
 						}
 			});
